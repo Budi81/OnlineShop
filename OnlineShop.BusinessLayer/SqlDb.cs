@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Data.SqlClient;
 
 namespace OnlineShop.BusinessLayer
 {
     class SqlDb : IDatabase
     {
+        private string connectionString = @"Server=localhost\SQLEXPRESS;Database=CarsDatabase;Trusted_Connection = True;";
+        private string querryGetAllOrders = @"SELECT * from";
+
         public void AddCustomer()
         {
             throw new NotImplementedException();
@@ -43,7 +46,14 @@ namespace OnlineShop.BusinessLayer
 
         public List<Order> GetAllOrders()
         {
-            throw new NotImplementedException();
+            List<Order> orders = new List<Order>();
+
+            SqlConnection dbConnection = new SqlConnection(connectionString);
+
+            SqlCommand command = new SqlCommand(querryGetAllOrders, dbConnection);
+
+            dbConnection.Open();
+            
         }
 
         public List<Product> GetAllProducts()
