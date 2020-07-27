@@ -7,12 +7,16 @@ namespace OnlineShop.BusinessLayer
     class SqlDb : IDatabase
     {
         private string connectionString = @"Server=localhost\SQLEXPRESS;Database=OnlineShopDb;Trusted_Connection = True;";
-        private string querryGetAllOrders = @"SELECT * from [dbo].[Orders]";
-        private string querryGetAllCustomers = @"SELECT * from";
 
-        public void AddCustomer()
+        public void AddCustomer(Dictionary<string, string> customerData)
         {
-            throw new NotImplementedException();
+            string addCustomerCommand = $@"INSERT INTO [dbo].[Customers] values (null, {customerData["FirstName"]}, {customerData["LastName"]}, {customerData["Adress"]}, {customerData["Email"]}, {customerData["Password"]})";
+            
+            SqlConnection dbConnection = new SqlConnection(connectionString);
+
+            SqlCommand command = new SqlCommand(addCustomerCommand, dbConnection);
+
+            command.
         }
 
         public void AddOrder()
@@ -27,7 +31,11 @@ namespace OnlineShop.BusinessLayer
 
         public void DelateCustomer(Customer customer)
         {
-            throw new NotImplementedException();
+            SqlConnection sqlConnection = new SqlConnection(connectionString);
+
+            SqlCommand command = new SqlCommand($@"DELETE FROM [dbo].[Customers] WHERE CustomerId ={customer.CustomerId}");
+
+            command.;
         }
 
         public void DelateOrder(Order order)
@@ -47,7 +55,7 @@ namespace OnlineShop.BusinessLayer
             SqlConnection dbConnection = new SqlConnection(connectionString);
 
             SqlCommand command = new SqlCommand(
-                @"SELECT CustomerId, FirstName, LastName, Adress, Email, Password from [dbo].[Customers]", dbConnection);
+                @"SELECT CustomerId, FirstName, LastName, Adress, Email, Password FROM [dbo].[Customers]", dbConnection);
 
             dbConnection.Open();
             SqlDataReader reader = command.ExecuteReader();

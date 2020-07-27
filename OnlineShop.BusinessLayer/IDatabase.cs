@@ -18,7 +18,7 @@ namespace OnlineShop.BusinessLayer
 
         Customer GetCustomer(string name, string surname);
 
-        void AddCustomer();
+        void AddCustomer(Dictionary<string, string> customerData);
 
         void DelateCustomer(Customer customer);
 
