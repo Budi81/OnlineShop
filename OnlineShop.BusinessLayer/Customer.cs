@@ -6,16 +6,36 @@ namespace OnlineShop.BusinessLayer
 {
     public class Customer
     {
-        int CustomerId;
+        private readonly int customerId;
 
-        string name;
-        string surname;
-        string adress;
-        string email;
-        string login;
-        string password;
+        private string name;
+        private string surname;
+        private string adress;
+        private string email;
+        private string password;
 
-        ShoppingCart chart;
+        private ShoppingCart chart;
+
+        public Customer(int customerId, string name, string surname, string adress, string email, string password)
+        {
+            this.customerId = customerId;
+            Name = name;
+            Surname = surname;
+            Adress = adress;
+            Email = email;
+            Password = password;
+            Chart = new ShoppingCart();
+        }
+
+        public string Name { get => name; private set => name = value; }
+        public string Surname { get => surname; private set => surname = value; }
+        public string Adress { get => adress; private set => adress = value; }
+        public string Email { get => email; private set => email = value; }
+        public string Password { get => password; set => password = value; }
+        
+        public ShoppingCart Chart { get => chart; private set => chart = value; }
+
+        public int CustomerId => customerId;
 
         void UdateData(Dictionary<string, string> customerUpdate)
         {

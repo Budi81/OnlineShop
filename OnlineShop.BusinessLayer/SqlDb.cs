@@ -6,8 +6,9 @@ namespace OnlineShop.BusinessLayer
 {
     class SqlDb : IDatabase
     {
-        private string connectionString = @"Server=localhost\SQLEXPRESS;Database=CarsDatabase;Trusted_Connection = True;";
-        private string querryGetAllOrders = @"SELECT * from";
+        private string connectionString = @"Server=localhost\SQLEXPRESS;Database=OnlineShopDb;Trusted_Connection = True;";
+        private string querryGetAllOrders = @"SELECT * from [dbo].[Orders]";
+        private string querryGetAllCustomers = @"SELECT * from";
 
         public void AddCustomer()
         {
@@ -41,7 +42,27 @@ namespace OnlineShop.BusinessLayer
 
         public List<Customer> GetAllCustomers()
         {
-            throw new NotImplementedException();
+            List<Customer> customers = new List<Customer>();
+
+            SqlConnection dbConnection = new SqlConnection(connectionString);
+
+            SqlCommand command = new SqlCommand(
+                @"SELECT CustomerId, FirstName, LastName, Adress, Email, Password from [dbo].[Customers]", dbConnection);
+
+            dbConnection.Open();
+            SqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Customer customer = new Customer(Convert.ToInt32(reader[0]), reader[1].ToString(), reader[2].ToString(), 
+                    reader[3].ToString(), reader[4].ToString(), reader[5].ToString());
+
+                customers.Add(customer);
+            }
+            reader.Close();
+            dbConnection.Dispose();
+
+            return customers;
         }
 
         public List<Order> GetAllOrders()
@@ -53,12 +74,37 @@ namespace OnlineShop.BusinessLayer
             SqlCommand command = new SqlCommand(querryGetAllOrders, dbConnection);
 
             dbConnection.Open();
-            
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Order order = new Order(reader[1], reader[2], reader[3], reader[4]);
+
+                orders.Add(order);
+            }
+            reader.Close();
+            dbConnection.Dispose();
+
+            return orders;
         }
 
         public List<Product> GetAllProducts()
         {
-            throw new NotImplementedException();
+            List<Product> products = new List<Product>();
+
+            SqlConnection dbConnection = new SqlConnection(connectionString);
+
+            SqlCommand command = new SqlCommand(@"SELECT ProductId, ProductName, ProductPrice, Stock from [dbo].[Products]", dbConnection);
+
+            dbConnection.Open();
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Product product = new Product(Convert.ToInt32(reader[0]), reader[1].ToString(), reader[2], reader[4]);
+            }
         }
 
         public Customer GetCustomer(string name, string surname)
