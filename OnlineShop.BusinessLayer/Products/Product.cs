@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OnlineShop.BusinessLayer.Enums;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Text;
@@ -8,6 +9,7 @@ namespace OnlineShop.BusinessLayer
     public abstract class Product
     {
         protected readonly int productId;
+        
         private int stock;
         
         private decimal price;
@@ -27,7 +29,8 @@ namespace OnlineShop.BusinessLayer
         public decimal Price { get => price; private set => price = value; }
         public int Stock { get => stock; private set => stock = value; }
 
-        public abstract Type GetType();
-        public abstract List<ProductAttributes> GetAttributes();
+        public abstract ProductType GetType();
+        
+        public abstract List<ProductAttribute> GetAttributes();
     }
 }

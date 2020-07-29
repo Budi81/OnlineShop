@@ -16,12 +16,14 @@ namespace OnlineShop.BusinessLayer
 
             SqlCommand command = new SqlCommand(addCustomerCommand, dbConnection);
 
-            command.
+            command.BeginExecuteNonQuery();
+
+            //int newId = (int)command.ExecuteScalar();
         }
 
-        public void AddOrder()
+        public void AddOrder(Order order)
         {
-            throw new NotImplementedException();
+            string addOrderCommand = $@"INSERT INTO [dbo].[Orders] values ({order.OrderId1}, {order.Customer.CustomerId}, {order.OrderCount}, {}";
         }
 
         public void AddProduct()
@@ -35,7 +37,7 @@ namespace OnlineShop.BusinessLayer
 
             SqlCommand command = new SqlCommand($@"DELETE FROM [dbo].[Customers] WHERE CustomerId ={customer.CustomerId}");
 
-            command.;
+            command.ExecuteNonQuery();
         }
 
         public void DelateOrder(Order order)

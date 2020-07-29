@@ -13,34 +13,23 @@ namespace OnlineShop.BusinessLayer.Products.Games
 
         private GamesCategory category;
 
-        public Game()
-            :this(productId, productName, price, stock)
+        public override ProductType GetType()
         {
-
+            throw new NotImplementedException();
         }
 
-        public Game(GamesStorageDataDevices dataStorageDevice, GamesPlatforms platform, GamesCategory category)
+        public override List<ProductAttribute> GetAttributes()
         {
-            base.productId = productId;
-            DataStorageDevice = dataStorageDevice;
-            Platform = platform;
-            Category = category;
-        }
-
-        public Type Type()
-        {
-            retrun Type.GAME;
-        }
-
-        public List<ProductAttribute> GetAttributes()
-        {
-                        // dodajemy ProductAttribute do listy
             List<ProductAttribute> attributes = new List<ProductAttribute>();
-            List.add(new ProductAttribute("gameStorageDevice", dataStorageDevice.ToString));
-            List.add.gamest
+            attributes.Add(new ProductAttribute("Game Storage Device", dataStorageDevice.ToString()));
+            attributes.Add(new ProductAttribute("Platform", platform.ToString()));
+            attributes.Add(new ProductAttribute("Category", category.ToString()));
+
+            return attributes;
         }
 
         public GamesStorageDataDevices DataStorageDevice { get => dataStorageDevice; private set => dataStorageDevice = value; }
+        
         public GamesPlatforms Platform { get => platform; private set => platform = value; }
         public GamesCategory Category { get => category; private set => category = value; }
     }

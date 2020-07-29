@@ -6,27 +6,38 @@ namespace OnlineShop.BusinessLayer
 {
     public class ShoppingCart
     {
-        Dictionary<Product, int> products;
+        private Dictionary<Product, int> products;
 
-        decimal countPrice;
+        private decimal countPrice;
 
-        public Dictionary<Product, int> Products { get => products; set => products = value; }
+        public Dictionary<Product, int> Products { get => products; private set => products = value; }
         
         public decimal CountPrice { get => countPrice; private set => countPrice = value; }
 
-        void AddToChart(Product product)
+        public void AddToChart(Product product, int quantity)
         {
-            throw new NotImplementedException();
+            products.Add(product, quantity);
+            Count();
         }
 
-        void RemoveFromChart(Product product)
+        public void RemoveFromChart(Product product)
         {
-            throw new NotImplementedException();
+            products.Remove(product);
+            Count();
         }
 
-        void ClearChart()
+        public void ClearChart()
         {
-            throw new NotImplementedException();
+            products.Clear();
+            Count();
+        }
+
+        public void Count()
+        {
+            foreach (KeyValuePair<Product, int> keyValues in products)
+            {
+                countPrice += keyValues.Key.Price * keyValues.Value;
+            }
         }
     }
 }

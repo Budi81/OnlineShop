@@ -37,9 +37,29 @@ namespace OnlineShop.BusinessLayer
 
         public int CustomerId => Id;
 
-        void UdateData(Dictionary<string, string> customerUpdate)
+        public void ModifyName(string name)
         {
-            throw new NotImplementedException();
+            this.Name = name;
+        }
+
+        public void ModifySurname(string surname)
+        {
+            this.Surname = surname;
+        }
+
+        public void ModifyAdress(string adress)
+        {
+            this.Adress = adress;
+        }
+
+        public void ModifyEmail(string email)
+        {
+            this.Email = email;
+        }
+
+        public void ChangePassword(string password)
+        {
+            this.Password = password;
         }
     }
 }

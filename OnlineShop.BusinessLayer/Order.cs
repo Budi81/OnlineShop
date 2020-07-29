@@ -8,16 +8,21 @@ namespace OnlineShop.BusinessLayer
     public class Order
     {
         private int OrderId;
+
+        private Customer customer;
         
         private decimal orderCount;
 
         private Dictionary<Product, int> products;
 
+        private DateTime dateOfOrder;
+
         private bool isSend;
 
-        public Order(int orderId1, decimal orderCount, Dictionary<Product, int> products, bool isSend)
+        public Order(int orderId1, Customer customer, decimal orderCount, Dictionary<Product, int> products, DateTime dateOfOrder, bool isSend)
         {
             OrderId1 = orderId1;
+            Customer = customer;
             OrderCount = orderCount;
             Products = products;
             IsSend = isSend;
@@ -27,6 +32,8 @@ namespace OnlineShop.BusinessLayer
         public decimal OrderCount { get => orderCount; private set => orderCount = value; }
         public int OrderId1 { get => OrderId; private set => OrderId = value; }
         public bool IsSend { get => isSend; private set => isSend = value; }
+        public Customer Customer { get => customer; private set => customer = value; }
+        public DateTime DateOfOrder { get => dateOfOrder; set => dateOfOrder = value; }
 
         public static Order fromShoppingCart(ShoppingCart shoppingCart)
         {
