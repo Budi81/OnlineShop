@@ -27,6 +27,19 @@ namespace OnlineShop.BusinessLayer.Products.Games
             Category = category;
         }
 
+        public Type Type()
+        {
+            retrun Type.GAME;
+        }
+
+        public List<ProductAttribute> GetAttributes()
+        {
+                        // dodajemy ProductAttribute do listy
+            List<ProductAttribute> attributes = new List<ProductAttribute>();
+            List.add(new ProductAttribute("gameStorageDevice", dataStorageDevice.ToString));
+            List.add.gamest
+        }
+
         public GamesStorageDataDevices DataStorageDevice { get => dataStorageDevice; private set => dataStorageDevice = value; }
         public GamesPlatforms Platform { get => platform; private set => platform = value; }
         public GamesCategory Category { get => category; private set => category = value; }

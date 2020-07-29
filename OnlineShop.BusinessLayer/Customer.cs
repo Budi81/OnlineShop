@@ -6,7 +6,7 @@ namespace OnlineShop.BusinessLayer
 {
     public class Customer
     {
-        private readonly int customerId;
+        private readonly int Id;
 
         private string name;
         private string surname;
@@ -18,7 +18,7 @@ namespace OnlineShop.BusinessLayer
 
         public Customer(int customerId, string name, string surname, string adress, string email, string password)
         {
-            this.customerId = customerId;
+            this.Id = customerId;
             Name = name;
             Surname = surname;
             Adress = adress;
@@ -35,7 +35,7 @@ namespace OnlineShop.BusinessLayer
         
         public ShoppingCart Chart { get => chart; private set => chart = value; }
 
-        public int CustomerId => customerId;
+        public int CustomerId => Id;
 
         void UdateData(Dictionary<string, string> customerUpdate)
         {

@@ -6,9 +6,13 @@ namespace OnlineShop.BusinessLayer
 {
     public class ShoppingCart
     {
-        Dictionary<string, int> products;
+        Dictionary<Product, int> products;
 
-        int countPrice;
+        decimal countPrice;
+
+        public Dictionary<Product, int> Products { get => products; set => products = value; }
+        
+        public decimal CountPrice { get => countPrice; private set => countPrice = value; }
 
         void AddToChart(Product product)
         {
@@ -21,11 +25,6 @@ namespace OnlineShop.BusinessLayer
         }
 
         void ClearChart()
-        {
-            throw new NotImplementedException();
-        }
-
-        Order PayChart()
         {
             throw new NotImplementedException();
         }

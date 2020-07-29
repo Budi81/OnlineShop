@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Text;
 
 namespace OnlineShop.BusinessLayer
@@ -9,11 +10,11 @@ namespace OnlineShop.BusinessLayer
         protected readonly int productId;
         private int stock;
         
-        private float price;
+        private decimal price;
 
         private string productName;
 
-        protected Product(int productId, string productName, float price, int stock)
+        protected Product(int productId, string productName, decimal price, int stock)
         {
             this.productId = productId;
             ProductName = productName;
@@ -23,7 +24,10 @@ namespace OnlineShop.BusinessLayer
 
         public int ProductId { get => productId; }
         public string ProductName { get => productName; private set => productName = value; }
-        public float Price { get => price; private set => price = value; }
+        public decimal Price { get => price; private set => price = value; }
         public int Stock { get => stock; private set => stock = value; }
+
+        public abstract Type GetType();
+        public abstract List<ProductAttributes> GetAttributes();
     }
 }
