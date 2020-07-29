@@ -26,7 +26,7 @@ namespace OnlineShop.BusinessLayer
 
         Order GetOrder(string orderId);
 
-        void AddOrder();
+        void AddOrder(Order order);
 
         void DelateOrder(Order order);
 
