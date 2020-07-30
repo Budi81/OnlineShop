@@ -16,14 +16,33 @@ namespace OnlineShop.BusinessLayer
 
             SqlCommand command = new SqlCommand(addCustomerCommand, dbConnection);
 
+            dbConnection.Open();
+
             command.BeginExecuteNonQuery();
 
-            //int newId = (int)command.ExecuteScalar();
+            dbConnection.Dispose();
         }
 
         public void AddOrder(Order order)
         {
-            string addOrderCommand = $@"INSERT INTO [dbo].[Orders] values ({order.OrderId1}, {order.Customer.CustomerId}, {order.OrderCount}, {}";
+            string addOrderCommand = $@"INSERT INTO [dbo].[Orders] values ({order.OrderId1}, {order.Customer.CustomerId}, {order.OrderCount}, {order.DateOfOrder}, {order.IsSend}"
+                + "SELECT CAST(scope_identity() AS int)";
+
+            SqlConnection dbConnection = new SqlConnection(connectionString);
+
+            SqlCommand command = new SqlCommand(addOrderCommand, dbConnection);
+
+            dbConnection.Open();
+
+            int newId = (int)command.ExecuteScalar();
+            // jeszcze nie mam pomysłu jak to dokończyć. Musi do tabeli OrderProduct dopisać Id nowego Order oraz id Produktów z tego ordera
+            string addOrderProduct = $@"INSERT INTO [dbo].[OrderProduct] values ({0}, {newId}, {order.Products.Keys})";
+
+            SqlCommand command2 = new SqlCommand(addOrderProduct, dbConnection);
+
+            command2.ExecuteNonQuery();
+
+            dbConnection.Dispose();
         }
 
         public void AddProduct()
@@ -33,11 +52,17 @@ namespace OnlineShop.BusinessLayer
 
         public void DelateCustomer(Customer customer)
         {
-            SqlConnection sqlConnection = new SqlConnection(connectionString);
+            string delateCustomer = $@"DELETE FROM [dbo].[Customers] WHERE CustomerId ={customer.CustomerId}";
 
-            SqlCommand command = new SqlCommand($@"DELETE FROM [dbo].[Customers] WHERE CustomerId ={customer.CustomerId}");
+            SqlConnection dbConnection = new SqlConnection(connectionString);
+
+            SqlCommand command = new SqlCommand(delateCustomer, dbConnection);
+
+            dbConnection.Open();
 
             command.ExecuteNonQuery();
+
+            dbConnection.Dispose();
         }
 
         public void DelateOrder(Order order)
@@ -52,14 +77,16 @@ namespace OnlineShop.BusinessLayer
 
         public List<Customer> GetAllCustomers()
         {
+            string getAllCustomers = @"SELECT CustomerId, FirstName, LastName, Adress, Email, Password FROM [dbo].[Customers]";
+            
             List<Customer> customers = new List<Customer>();
 
             SqlConnection dbConnection = new SqlConnection(connectionString);
 
-            SqlCommand command = new SqlCommand(
-                @"SELECT CustomerId, FirstName, LastName, Adress, Email, Password FROM [dbo].[Customers]", dbConnection);
+            SqlCommand command = new SqlCommand(getAllCustomers, dbConnection);
 
             dbConnection.Open();
+            
             SqlDataReader reader = command.ExecuteReader();
 
             while (reader.Read())
@@ -74,22 +101,24 @@ namespace OnlineShop.BusinessLayer
 
             return customers;
         }
-
+        
         public List<Order> GetAllOrders()
         {
+            string getAllOrders = @"SELECT id, CustomerId, AmountToPay, DateOfOrder, Status FROM [dbo].[Orders]";
+            
             List<Order> orders = new List<Order>();
 
             SqlConnection dbConnection = new SqlConnection(connectionString);
 
-            SqlCommand command = new SqlCommand(querryGetAllOrders, dbConnection);
+            SqlCommand command = new SqlCommand(getAllOrders, dbConnection);
 
             dbConnection.Open();
 
             SqlDataReader reader = command.ExecuteReader();
-
+             // jeszcze mysłę jak to zrobić żeby zaciągało różne dane z różnych tabel potrzebne do utworzenia instancji Order
             while (reader.Read())
             {
-                Order order = new Order(reader[1], reader[2], reader[3], reader[4]);
+                Order order = new Order(reader[1], reader[2], Convert.ToDecimal(reader[3]), reader[4], Convert.ToBoolean(reader[5]));
 
                 orders.Add(order);
             }
@@ -101,19 +130,21 @@ namespace OnlineShop.BusinessLayer
 
         public List<Product> GetAllProducts()
         {
+            string getAllProducts = @"SELECT ProductId, ProductName, ProductPrice, Stock from [dbo].[Products]";
+            
             List<Product> products = new List<Product>();
 
             SqlConnection dbConnection = new SqlConnection(connectionString);
 
-            SqlCommand command = new SqlCommand(@"SELECT ProductId, ProductName, ProductPrice, Stock from [dbo].[Products]", dbConnection);
+            SqlCommand command = new SqlCommand(getAllProducts, dbConnection);
 
             dbConnection.Open();
 
             SqlDataReader reader = command.ExecuteReader();
-
+            // nie wiem jak zrobić listę<Product> bez tworzenia instancji poszczególnych produktów
             while (reader.Read())
             {
-                Product product = new Product(Convert.ToInt32(reader[0]), reader[1].ToString(), reader[2], reader[4]);
+                Product product = new Product(reader[0], reader[1].ToString(), Convert.ToDecimal(reader[2]), reader[4].ToString());
             }
         }
 

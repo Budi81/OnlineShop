@@ -35,16 +35,18 @@ namespace OnlineShop.BusinessLayer
         public Customer Customer { get => customer; private set => customer = value; }
         public DateTime DateOfOrder { get => dateOfOrder; set => dateOfOrder = value; }
 
-        public static Order fromShoppingCart(ShoppingCart shoppingCart)
+        public static Order fromShoppingCart(ShoppingCart shoppingCart, Customer customer)
         {
             decimal orderCount = 0;
             foreach (KeyValuePair<Product, int> keyValuePair in shoppingCart.Products)
             {
                 orderCount += keyValuePair.Key.Price * keyValuePair.Value;
             }
-
             int orderId = 0;
-            Order newOrder = new Order(0, orderCount, shoppingCart.Products, false);
+
+            DateTime dateOfOrder = DateTime.UtcNow;
+
+            Order newOrder = new Order(orderId, customer, orderCount, shoppingCart.Products, dateOfOrder, false);
 
             return newOrder;
         } 

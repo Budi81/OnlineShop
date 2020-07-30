@@ -4,7 +4,17 @@ namespace OnlineShop.BusinessLayer
 {
     public class Shop
     {
-        IDatabase database;
+        bool isRunning = true;
+
+        private IDatabase database;
+
+        private IControler controler;
+
+        public Shop(IDatabase database, IControler controler)
+        {
+            this.database = database;
+            this.controler = controler;
+        }
 
         bool IsEmployee()
         {
@@ -46,7 +56,13 @@ namespace OnlineShop.BusinessLayer
             throw new NotImplementedException();
         }
 
+        void ProgramRunning()
+        {
+            while (isRunning)
+            {
 
+            }
+        }
 
 
 
