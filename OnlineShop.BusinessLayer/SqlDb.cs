@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 
 namespace OnlineShop.BusinessLayer
 {
-    class SqlDb : IDatabase
+    public class SqlDb : IDatabase
     {
         private string connectionString = @"Server=localhost\SQLEXPRESS;Database=OnlineShopDb;Trusted_Connection = True;";
 

@@ -16,51 +16,91 @@ namespace OnlineShop.BusinessLayer
             this.controler = controler;
         }
 
-        bool IsEmployee()
+        private void DisplayStartingMenu()
         {
             throw new NotImplementedException();
         }
 
-        void ShowAllProducts()
+        public bool IsEmployee()
         {
             throw new NotImplementedException();
         }
 
-        void ShowProduct(Product product)
+        private void ShowAllProducts()
         {
             throw new NotImplementedException();
         }
 
-        void ShowAllCustomers()
+        private void ShowProduct(Product product)
         {
             throw new NotImplementedException();
         }
 
-        void ShowCustomer(Customer customer)
+        private void ShowAllCustomers()
         {
             throw new NotImplementedException();
         }
 
-        void ShowAllOrders()
+        private void ShowCustomer(Customer customer)
         {
             throw new NotImplementedException();
         }
 
-        void ShowOrder(Order order)
+        private void ShowAllOrders()
         {
             throw new NotImplementedException();
         }
 
-        void CreateAccount()
+        private void FindOrder(Order order)
         {
             throw new NotImplementedException();
         }
 
-        void ProgramRunning()
+        private void CreateAccount()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ProgramRunning()
         {
             while (isRunning)
             {
+                DisplayStartingMenu();
 
+                if (IsEmployee())
+                {
+                    switch (controler.UserChoice())
+                    {
+                        case 1:
+                            ShowAllOrders();
+                            
+                            break;
+                        case 2:
+                            
+
+                            break;
+
+                        default:
+                            controler.DisplayError("Wrong choice!", 1000);
+
+                            break;
+                    }
+
+                }
+                else
+                {
+                    switch (controler.UserChoice())
+                    {
+                        case 1:
+
+                            break;
+                        default:
+                            controler.DisplayError("Wrong choice!", 1000);
+
+                            break;
+                    }
+
+                }
             }
         }
 

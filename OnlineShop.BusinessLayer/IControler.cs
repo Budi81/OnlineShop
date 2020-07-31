@@ -6,5 +6,8 @@ namespace OnlineShop.BusinessLayer
 {
     public interface IControler
     {
+        int UserChoice();
+
+        void DisplayError(string massage, int miliseconds);
     }
 }
