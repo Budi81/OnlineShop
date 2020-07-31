@@ -1,4 +1,6 @@
-﻿using System;
+﻿using OnlineShop.BusinessLayer.Enums;
+using OnlineShop.BusinessLayer.Products;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 
@@ -8,24 +10,24 @@ namespace OnlineShop.BusinessLayer
     {
         private string connectionString = @"Server=localhost\SQLEXPRESS;Database=OnlineShopDb;Trusted_Connection = True;";
 
-        public void AddCustomer(Dictionary<string, string> customerData)
+        public void AddCustomer(Customer customer)
         {
-            string addCustomerCommand = $@"INSERT INTO [dbo].[Customers] values (null, {customerData["FirstName"]}, {customerData["LastName"]}, {customerData["Adress"]}, {customerData["Email"]}, {customerData["Password"]})";
-            
+            string addCustomerCommand = $@"INSERT INTO [dbo].[Customers] values (null, {customer.Name}, {customer.Surname}, {customer.Adress}, {customer.Email}, {customer.Password})";
+
             SqlConnection dbConnection = new SqlConnection(connectionString);
 
             SqlCommand command = new SqlCommand(addCustomerCommand, dbConnection);
 
             dbConnection.Open();
 
-            command.BeginExecuteNonQuery();
+            command.ExecuteNonQuery();
 
             dbConnection.Dispose();
         }
 
-        public void AddOrder(Order order)
+        public Order AddOrder(Order order)
         {
-            string addOrderCommand = $@"INSERT INTO [dbo].[Orders] values ({order.OrderId1}, {order.Customer.CustomerId}, {order.OrderCount}, {order.DateOfOrder}, {order.IsSend}"
+            string addOrderCommand = $@"INSERT INTO [dbo].[Orders] (CustomerId, AmountToPay, DateOfOrder, Status) values ({order.Customer.CustomerId}, {order.OrderCount}, {order.DateOfOrder}, {order.IsSend});"
                 + "SELECT CAST(scope_identity() AS int)";
 
             SqlConnection dbConnection = new SqlConnection(connectionString);
@@ -35,19 +37,40 @@ namespace OnlineShop.BusinessLayer
             dbConnection.Open();
 
             int newId = (int)command.ExecuteScalar();
-            // jeszcze nie mam pomysłu jak to dokończyć. Musi do tabeli OrderProduct dopisać Id nowego Order oraz id Produktów z tego ordera
-            string addOrderProduct = $@"INSERT INTO [dbo].[OrderProduct] values ({0}, {newId}, {order.Products.Keys})";
 
-            SqlCommand command2 = new SqlCommand(addOrderProduct, dbConnection);
+            order = order.withId(newId);
 
-            command2.ExecuteNonQuery();
+            foreach (KeyValuePair<Product, int> keyValues in order.Products)
+            {
+                string addOrderProduct = $@"INSERT INTO [dbo].[OrderProduct] (OrderId, ProductId, Count) values ({order.OrderId}, {keyValues.Key.ProductId}, {keyValues.Value};"
+                   + " SELECT CAST(scope_identity() AS int)";
 
+                SqlCommand command2 = new SqlCommand(addOrderProduct, dbConnection);
+
+                command2.ExecuteNonQuery();
+            }
             dbConnection.Dispose();
+
+            return order;
         }
 
-        public void AddProduct()
+        public Product AddProduct(Product product)
         {
-            throw new NotImplementedException();
+            string addProduct = $@"INSERT INTO [dbo].[Products] (ProductName, ProductPrice, Stock) values ({product.ProductName}, {product.Price}, {product.Stock})";
+
+            SqlConnection dbConnection = new SqlConnection(connectionString);
+
+            SqlCommand command = new SqlCommand(addProduct, dbConnection);
+
+            dbConnection.Open();
+
+            int newId = (int)command.ExecuteScalar();
+
+            product = product.WithId(newId);
+
+            dbConnection.Close();
+
+            return product;
         }
 
         public void DelateCustomer(Customer customer)
@@ -67,18 +90,29 @@ namespace OnlineShop.BusinessLayer
 
         public void DelateOrder(Order order)
         {
-            throw new NotImplementedException();
-        }
+            string delateOrder = $@"DELETE FROM [dbo].[Orders] WHERE id ={order.OrderId}";
 
-        public void DelateProduct(Product product)
-        {
-            throw new NotImplementedException();
+            SqlConnection dbConnection = new SqlConnection(connectionString);
+
+            SqlCommand command = new SqlCommand(delateOrder, dbConnection);
+
+            dbConnection.Open();
+
+            command.ExecuteNonQuery();
+
+            string delateOrderProduct = $@"DELETE FROM [dbo].[OrderProduct] WHERE OrderId ={order.OrderId}";
+
+            SqlCommand command2 = new SqlCommand(delateOrderProduct, dbConnection);
+
+            command2.ExecuteNonQuery();
+
+            dbConnection.Dispose();
         }
 
         public List<Customer> GetAllCustomers()
         {
             string getAllCustomers = @"SELECT CustomerId, FirstName, LastName, Adress, Email, Password FROM [dbo].[Customers]";
-            
+
             List<Customer> customers = new List<Customer>();
 
             SqlConnection dbConnection = new SqlConnection(connectionString);
@@ -86,12 +120,12 @@ namespace OnlineShop.BusinessLayer
             SqlCommand command = new SqlCommand(getAllCustomers, dbConnection);
 
             dbConnection.Open();
-            
+
             SqlDataReader reader = command.ExecuteReader();
 
             while (reader.Read())
             {
-                Customer customer = new Customer(Convert.ToInt32(reader[0]), reader[1].ToString(), reader[2].ToString(), 
+                Customer customer = new Customer(Convert.ToInt32(reader[0]), reader[1].ToString(), reader[2].ToString(),
                     reader[3].ToString(), reader[4].ToString(), reader[5].ToString());
 
                 customers.Add(customer);
@@ -101,11 +135,11 @@ namespace OnlineShop.BusinessLayer
 
             return customers;
         }
-        
+
         public List<Order> GetAllOrders()
         {
             string getAllOrders = @"SELECT id, CustomerId, AmountToPay, DateOfOrder, Status FROM [dbo].[Orders]";
-            
+
             List<Order> orders = new List<Order>();
 
             SqlConnection dbConnection = new SqlConnection(connectionString);
@@ -115,10 +149,13 @@ namespace OnlineShop.BusinessLayer
             dbConnection.Open();
 
             SqlDataReader reader = command.ExecuteReader();
-             // jeszcze mysłę jak to zrobić żeby zaciągało różne dane z różnych tabel potrzebne do utworzenia instancji Order
             while (reader.Read())
             {
-                Order order = new Order(reader[1], reader[2], Convert.ToDecimal(reader[3]), reader[4], Convert.ToBoolean(reader[5]));
+                Dictionary<Product, int> orderProducts = GetOrderProducts(Convert.ToInt32(reader[0]));
+
+                Customer customer = GetCustomer(Convert.ToInt32(reader[1]));
+
+                Order order = new Order(Convert.ToInt32(reader[0]), customer, Convert.ToDecimal(reader[2]), orderProducts, Convert.ToDateTime(reader[3]), Convert.ToBoolean(reader[4]));
 
                 orders.Add(order);
             }
@@ -130,8 +167,8 @@ namespace OnlineShop.BusinessLayer
 
         public List<Product> GetAllProducts()
         {
-            string getAllProducts = @"SELECT ProductId, ProductName, ProductPrice, Stock from [dbo].[Products]";
-            
+            string getAllProducts = @"SELECT ProductId, ProductName, ProductPrice, Stock, Type from [dbo].[Products]";
+
             List<Product> products = new List<Product>();
 
             SqlConnection dbConnection = new SqlConnection(connectionString);
@@ -141,26 +178,192 @@ namespace OnlineShop.BusinessLayer
             dbConnection.Open();
 
             SqlDataReader reader = command.ExecuteReader();
-            // nie wiem jak zrobić listę<Product> bez tworzenia instancji poszczególnych produktów
+
             while (reader.Read())
             {
-                Product product = new Product(reader[0], reader[1].ToString(), Convert.ToDecimal(reader[2]), reader[4].ToString());
+                Dictionary<String, String> productAttributes = GetProductAttributes(Convert.ToInt32(reader[0]));
+                Product product = ProductFactory.produce(Convert.ToInt32(reader[0]), reader[1].ToString(), Convert.ToDecimal(reader[2]), Convert.ToInt32(reader[3]), (ProductType)Enum.Parse(typeof(ProductType), reader[4].ToString()), productAttributes);
+
+                products.Add(product);
             }
+
+            return products;
+        }
+        
+        public List<Customer> GetCustomer(string name, string surname)
+        {
+            string getCustomer = $@"SELECT CustomerId, FirstName, LastName, Adress, Email, Password FROM [dbo].[Customers] WHERE FirstName={name} and LastName={surname}";
+
+            List<Customer> customers = new List<Customer>();
+            
+            SqlConnection dbConnection = new SqlConnection(connectionString);
+
+            SqlCommand command = new SqlCommand(getCustomer, dbConnection);
+
+            dbConnection.Open();
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Customer customer = new Customer(Convert.ToInt32(reader[0]), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), reader[4].ToString(), reader[5].ToString());
+                customers.Add(customer);
+            }
+            reader.Close();
+            dbConnection.Close();
+
+            return customers;
+
         }
 
-        public Customer GetCustomer(string name, string surname)
+        public Customer GetCustomer(int customerId)
         {
-            throw new NotImplementedException();
+            string getCustomer = $@"SELECT CustomerId, FirstName, LastName, Adress, Email, Password FROM [dbo].[Customers] WHERE CustomerId={customerId}";
+
+            SqlConnection dbConnection = new SqlConnection(connectionString);
+
+            SqlCommand command = new SqlCommand(getCustomer, dbConnection);
+
+            dbConnection.Open();
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            Customer customer = new Customer(Convert.ToInt32(reader[0]), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), reader[4].ToString(), reader[5].ToString());
+
+            reader.Close();
+            dbConnection.Close();
+
+            return customer;
         }
 
         public Order GetOrder(string orderId)
         {
-            throw new NotImplementedException();
+            string getCustomer = $@"SELECT id, CustomerId, AmountToPay, DateOfOrder, Status FROM [dbo].[Orders] WHERE id={orderId}";
+
+            SqlConnection dbconnection = new SqlConnection(connectionString);
+
+            SqlCommand command = new SqlCommand(getCustomer, dbconnection);
+
+            dbconnection.Open();
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            Dictionary<Product, int> orderProducts = GetOrderProducts(Convert.ToInt32(reader[0]));
+
+            Customer customer = GetCustomer(Convert.ToInt32(reader[1]));
+
+            Order order = new Order(Convert.ToInt32(reader[0]), customer, Convert.ToDecimal(reader[2]), orderProducts, Convert.ToDateTime(reader[3]), Convert.ToBoolean(reader[4]));
+
+            reader.Close();
+            dbconnection.Close();
+
+            return order;
         }
 
-        public Product GetProduct(string productName)
+        public List<Product> GetProduct(string productName)
+
+
         {
-            throw new NotImplementedException();
+            string getProducts = $@"SELECT ProductId, ProductName, ProductPrice, Stock, Type FROM [dbo].[Products] WHERE ProductName LIKE {productName}";
+
+            List<Product> products = new List<Product>();
+
+            SqlConnection dbConnection = new SqlConnection(connectionString);
+
+            SqlCommand command = new SqlCommand(getProducts, dbConnection);
+
+            dbConnection.Open();
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Dictionary<String, String> productAttributes = GetProductAttributes(Convert.ToInt32(reader[0]));
+                Product product = ProductFactory.produce(Convert.ToInt32(reader[0]), reader[1].ToString(), Convert.ToDecimal(reader[2]), Convert.ToInt32(reader[3]), (ProductType)Enum.Parse(typeof(ProductType), reader[4].ToString()), productAttributes);
+
+                products.Add(product);
+            }
+
+            return products;
+
+        }
+
+        public Product GetProduct(int productId)
+        {
+            string getProduct = $@"SELECT ProductId, ProductName, ProductPrice, Stock, Type FROM [dbo].[Products] WHERE ProductId={productId}";
+
+            SqlConnection dbConnection = new SqlConnection(connectionString);
+
+            SqlCommand command = new SqlCommand(getProduct, dbConnection);
+
+            dbConnection.Open();
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            Product product = null;
+
+   
+            Dictionary<String, String> productAttributes = GetProductAttributes(Convert.ToInt32(reader[0]));
+            product = ProductFactory.produce(Convert.ToInt32(reader[0]), reader[1].ToString(), Convert.ToDecimal(reader[2]), Convert.ToInt32(reader[3]), (ProductType)Enum.Parse(typeof(ProductType), reader[4].ToString()), productAttributes);
+     
+            reader.Close();
+            dbConnection.Close();
+
+            return product;
+
+        }
+
+        private Dictionary<Product, int> GetOrderProducts(int orderId)
+        {
+            string getOrderProducts = $@"SELECT Id, ProductId, Count FROM [dbo].[OrderProduct] WHERE OrderId={orderId}";
+
+            Dictionary<Product, int> orderProducts = new Dictionary<Product, int>();
+
+            SqlConnection dbConnection = new SqlConnection(connectionString);
+
+            SqlCommand command = new SqlCommand(getOrderProducts, dbConnection);
+
+            dbConnection.Open();
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Product product = GetProduct(Convert.ToInt32(reader[1]));
+
+                orderProducts.Add(product, Convert.ToInt32(reader[0]));
+            }
+            reader.Close();
+            dbConnection.Dispose();
+
+            return orderProducts;
+        }
+
+        private Dictionary<String, String> GetProductAttributes(int productId)
+        {
+            string getOrderProducts = $@"SELECT Name, Value FROM [dbo].[ProductAttributes] WHERE ProductId={productId}";
+
+            Dictionary<String, String> productAttributes = new Dictionary<String, String>();
+
+            SqlConnection dbConnection = new SqlConnection(connectionString);
+
+            SqlCommand command = new SqlCommand(getOrderProducts, dbConnection);
+
+            dbConnection.Open();
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                productAttributes.Add(reader[0].ToString(), reader[1].ToString());
+            }
+            reader.Close();
+            dbConnection.Dispose();
+
+            return productAttributes;
         }
     }
+
+   
 }
+

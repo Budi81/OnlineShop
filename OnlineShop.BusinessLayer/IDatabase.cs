@@ -10,7 +10,7 @@ namespace OnlineShop.BusinessLayer
 
         Product GetProduct(string productName);
 
-        void AddProduct();
+        void AddProduct(Product product);
 
         void DelateProduct(Product product);
 

@@ -16,7 +16,7 @@ namespace OnlineShop.BusinessLayer
 
         private string productName;
 
-        protected Product(int productId, string productName, decimal price, int stock)
+        public Product(int productId, string productName, decimal price, int stock)
         {
             this.productId = productId;
             ProductName = productName;

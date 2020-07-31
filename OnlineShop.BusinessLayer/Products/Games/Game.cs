@@ -13,6 +13,14 @@ namespace OnlineShop.BusinessLayer.Products.Games
 
         private GamesCategory category;
 
+        public Game(int productId, string productName, decimal price, int stock, ProductType type, GamesStorageDataDevices gamesStorageDataDevices, GamesPlatforms platform, GamesCategory category) 
+            : base(productId, productName, price, stock, type)
+        {
+            this.DataStorageDevice = dataStorageDevice;
+            this.Platform = platform;
+            this.category = category;
+        }
+
         public override ProductType GetType()
         {
             throw new NotImplementedException();
@@ -28,9 +36,16 @@ namespace OnlineShop.BusinessLayer.Products.Games
             return attributes;
         }
 
+        public override Product WithId(int newId)
+        {
+              return new Game(newId, this.ProductName, this.Price, this.Stock, this.Type, this.DataStorageDevice, this.Platform, this.Category);
+        }
+
         public GamesStorageDataDevices DataStorageDevice { get => dataStorageDevice; private set => dataStorageDevice = value; }
         
         public GamesPlatforms Platform { get => platform; private set => platform = value; }
         public GamesCategory Category { get => category; private set => category = value; }
+
+
     }
 }
