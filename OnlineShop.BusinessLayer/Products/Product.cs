@@ -16,21 +16,27 @@ namespace OnlineShop.BusinessLayer
 
         private string productName;
 
-        public Product(int productId, string productName, decimal price, int stock)
+        private ProductType type;
+
+        public Product(int productId, string productName, decimal price, int stock, ProductType type)
         {
             this.productId = productId;
             ProductName = productName;
             Price = price;
             Stock = stock;
+            Type = type;
         }
 
         public int ProductId { get => productId; }
         public string ProductName { get => productName; private set => productName = value; }
         public decimal Price { get => price; private set => price = value; }
         public int Stock { get => stock; private set => stock = value; }
+        public ProductType Type { get => type; private set => type = value; }
 
         public abstract ProductType GetType();
         
         public abstract List<ProductAttribute> GetAttributes();
+
+        public abstract Product WithId(int newId);
     }
 }

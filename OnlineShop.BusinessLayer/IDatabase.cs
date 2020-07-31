@@ -6,29 +6,32 @@ namespace OnlineShop.BusinessLayer
 {
     public interface IDatabase
     {
-        List<Product> GetAllProducts();
+         void AddCustomer(Customer customer);
 
-        Product GetProduct(string productName);
+         Order AddOrder(Order order);
 
-        void AddProduct(Product product);
+         Product AddProduct(Product product);
 
-        void DelateProduct(Product product);
+         void DelateCustomer(Customer customer);
 
-        List<Customer> GetAllCustomers();
+         void DelateOrder(Order order);
 
-        Customer GetCustomer(string name, string surname);
+         List<Customer> GetAllCustomers();
 
-        void AddCustomer(Dictionary<string, string> customerData);
+         List<Order> GetAllOrders();
 
-        void DelateCustomer(Customer customer);
+         List<Product> GetAllProducts();
 
-        List<Order> GetAllOrders();
+         List<Customer> GetCustomer(string name, string surname);
 
-        Order GetOrder(string orderId);
+         Customer GetCustomer(int customerId);
 
-        void AddOrder(Order order);
+         Order GetOrder(string orderId);
 
-        void DelateOrder(Order order);
+         List<Product> GetProduct(string productName);
+
+         Product GetProduct(int productId);
+
 
     }
 }
