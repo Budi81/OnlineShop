@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace OnlineShop.ConsoleInterface
 {
-    public class ConsoleController :IController
+    public class ConsoleController : IController
     {
         public int UserChoice()
         {
@@ -22,6 +22,29 @@ namespace OnlineShop.ConsoleInterface
         public void WriteOutData(string message)
         {
             Console.WriteLine(message);
+        }
+
+        public string GetLogin()
+        {
+            Console.Write("Login: ");
+            return Console.ReadLine();
+        }
+
+        public string GetPassword()
+        {
+            Console.Write("Password: ");
+            string password = null;
+            while (true)
+            {
+                var key = Console.ReadKey(true);
+                if (key.Key == ConsoleKey.Enter)
+                {
+                    break;
+                }
+
+                password += key.KeyChar;
+            }
+            return password;
         }
 
     }

@@ -11,5 +11,9 @@ namespace OnlineShop.BusinessLayer
         void DisplayError(string massage, int milliseconds);
 
         void WriteOutData(string message);
+
+        string GetLogin();
+
+        string GetPassword();
     }
 }

@@ -6,6 +6,8 @@ namespace OnlineShop.BusinessLayer
     public class Shop
     {
         bool isRunning = true;
+        private string userLogin = null;
+        private string userPassword = null;
 
         private IDatabase database;
 
@@ -19,12 +21,13 @@ namespace OnlineShop.BusinessLayer
 
         private void DisplayStartingMenu()
         {
-            throw new NotImplementedException();
+            userLogin = controller.GetLogin();
+            userPassword = controller.GetPassword();
         }
 
         public bool IsEmployee()
         {
-            throw new NotImplementedException();
+            return (userLogin == Employee.Login && userPassword == Employee.Password);
         }
 
         private void ShowAllProducts()
