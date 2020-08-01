@@ -8,12 +8,14 @@ namespace OnlineShop.BusinessLayer
     {
         int UserChoice(string message);
 
-        void DisplayError(string massage, int milliseconds);
+        void DisplayMessage(string massage, int milliseconds);
 
         void WriteOutData(string message);
 
         string GetInput(string message);
 
         string GetPassword();
+
+        void DisplayCustomer(Customer customer);
     }
 }

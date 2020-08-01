@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OnlineShop.BusinessLayer
 {
     public class Shop
     {
-        bool isRunning = true;
+        private bool isRunning = true;
+        private bool logIn = false;
+        
         private string userLogin = null;
         private string userPassword = null;
 
@@ -35,6 +38,7 @@ namespace OnlineShop.BusinessLayer
             userLogin = controller.GetInput("Login: ");
             userPassword = controller.GetPassword();
         }
+       
         public bool IsEmployee()
         {
             return (userLogin == Employee.Login && userPassword == Employee.Password);
@@ -67,9 +71,7 @@ namespace OnlineShop.BusinessLayer
             List<Customer> allCustomers = database.GetAllCustomers();
             foreach (var customer in allCustomers)
             {
-                controller.WriteOutData(
-                    $"ID: {customer.CustomerId}, {customer.Name} {customer.Surname}\n" +
-                    $"e-mail: {customer.Email}");
+                controller.DisplayCustomer(customer);
             }
         }
 
@@ -115,6 +117,18 @@ namespace OnlineShop.BusinessLayer
             database.AddCustomer(newCustomer);
         }
 
+        private void ShowCustomerOrders(Customer customer)
+        {
+            List<Order> orders = database.GetCustomerOrders(customer);
+            foreach (var order in orders)
+            {
+                controller.WriteOutData(
+                    $"ID: {order.OrderId}, Date: {order.DateOfOrder}, " +
+                    $"Product: {order.Products}, Count: {order.OrderCount}, " +
+                    $"Sent: {order.IsSend}");
+            }
+        }
+
         public void ProgramRunning()
         {
             while (isRunning)
@@ -130,55 +144,91 @@ namespace OnlineShop.BusinessLayer
                         CreateAccount();
                         break;
                     case 3:
+                        controller.DisplayMessage("Ending program", 1000);
+                        isRunning = false;
+
                         break;
                     default:
-                        controller.DisplayError("Wrong choice!", 1000);
+                        controller.DisplayMessage("Wrong choice!", 1000);
                         break;
                 }
 
-                if (IsEmployee())
+                if (IsEmployee() && isRunning)
                 {
-                    switch (controller.UserChoice(
-                        "Hi Mark!" +
-                        "What do you want to do today?\n" +
-                        "  (1) Show all orders\n" +
-                        "  (2) ..."))
+                    logIn = true;
+                    while (logIn)
                     {
-                        case 1:
-                            ShowAllOrders();
-                            
-                            break;
-                        case 2:
-                            
+                        switch (controller.UserChoice(
+                            "Hi Mark!" +
+                            "What do you want to do today?\n" +
+                            "  (1) Show all orders\n" +
+                            "  (2) Show all customers\n" +
+                            "  (3) Show all products\n" +
+                            "  (4) Logout"))
+                        {
+                            case 1:
+                                ShowAllOrders();
 
-                            break;
+                                break;
+                            case 2:
+                                ShowAllCustomers();
 
-                        default:
-                            controller.DisplayError("Wrong choice!", 1000);
+                                break;
+                            case 3:
+                                ShowAllProducts();
 
-                            break;
+                                break;
+                            case 4:
+                                controller.DisplayMessage("Logging out..", 1000);
+                                logIn = false;
+
+                                break;
+                            default:
+                                controller.DisplayMessage("Wrong choice!", 1000);
+
+                                break;
+                        }
                     }
-
                 }
-                else
+                else if (database.GetCustomer(userLogin, userPassword).IsFound && isRunning)
                 {
-                    switch (controller.UserChoice(
-                        $"Hello {userLogin}!\n" +
-                        $"How may I help you?\n" +
-                        $"  (1) ..."))
+                    logIn = true;
+                    Customer customer = database.GetCustomer(userLogin, userPassword).FoundEntry;
+
+                    while (logIn)
                     {
-                        case 1:
+                        switch (controller.UserChoice(
+                            $"Hello {customer.Name}!\n" +
+                            $"How may I help you?\n" +
+                            "  (1) Go Shopping\n" +
+                            "  (2) Show my order\n" +
+                            "  (3) Logout"))
+                        {
+                            case 1:
+                                ShowAllProducts();
 
-                            break;
-                        default:
-                            controller.DisplayError("Wrong choice!", 1000);
+                                break;
+                            case 2:
+                                ShowCustomerOrders(customer);
 
-                            break;
+                                break;
+                            case 3:
+                                controller.DisplayMessage("Logging out..", 1000);
+                                logIn = false;
+
+                                break;
+                            default:
+                                controller.DisplayMessage("Wrong choice!", 1000);
+
+                                break;
+                        }
                     }
-
+                }
+                else if (!database.GetCustomer(userLogin, userPassword).IsFound && isRunning)
+                {
+                    controller.DisplayMessage("Wrong login or password", 1000);
                 }
             }
         }
-
     }
 }

@@ -20,7 +20,7 @@ namespace OnlineShop.ConsoleInterface
             } while (!output);
         }
 
-        public void DisplayError(string massage, int milliseconds)
+        public void DisplayMessage(string massage, int milliseconds)
         {
             Console.WriteLine(massage);
             Thread.Sleep(milliseconds);
@@ -54,5 +54,14 @@ namespace OnlineShop.ConsoleInterface
             return password;
         }
 
+        public void DisplayCustomer(Customer customer)
+        {
+            Console.WriteLine(new string('-', 30));
+            Console.WriteLine($"Customer Id: {customer.CustomerId}\n" +
+                $"Name: {customer.Name} {customer.Surname}\n" +
+                $"email: {customer.Email}\n" +
+                $"Adress:: {customer.Address}");
+            Console.WriteLine(new string('-', 30));
+        }
     }
 }

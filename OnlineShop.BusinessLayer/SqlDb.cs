@@ -3,6 +3,7 @@ using OnlineShop.BusinessLayer.Products;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace OnlineShop.BusinessLayer
 {
@@ -243,28 +244,41 @@ namespace OnlineShop.BusinessLayer
             return customer;
         }
 
-        public Customer GetCustomer(string email, string password)
+        public GetCustomerResult GetCustomer(string email, string password)
         {
-            string getCustomer = $@"SELECT CustomerId, FirstName, LastName, Adress, Email, Password "
-                +$@"FROM [dbo].[Customers] WHERE Email='{email}' and Password='{password}'";
-
-            SqlConnection dbConnection = new SqlConnection(connectionString);
-
-            SqlCommand command = new SqlCommand(getCustomer, dbConnection);
-
-            dbConnection.Open();
-
-            SqlDataReader reader = command.ExecuteReader();
-
-            Customer customer = new Customer(Convert.ToInt32(reader[0]), reader[1].ToString(), reader[2].ToString(), 
-                reader[3].ToString(), reader[4].ToString(), reader[5].ToString());
-
-            reader.Close();
-            dbConnection.Close();
-
-            return customer;
-
+            var customer = GetAllCustomers().FirstOrDefault(c => c.Email == email && c.Password == password);
+            if (customer == null)
+            {
+                return new GetCustomerResult();
+            }
+            else
+            {
+                return new GetCustomerResult(customer);                
+            }
         }
+
+        //public GetCustomerResult GetCustomer(string email, string password)
+        //{
+        //    string getCustomer = $@"SELECT CustomerId, FirstName, LastName, Adress, Email, Password "
+        //        +$@"FROM [dbo].[Customers] WHERE Email='{email}' and Password='{password}'";
+
+        //    SqlConnection dbConnection = new SqlConnection(connectionString);
+
+        //    SqlCommand command = new SqlCommand(getCustomer, dbConnection);
+
+        //    dbConnection.Open();
+
+        //    SqlDataReader reader = command.ExecuteReader();
+
+        //    Customer customer = new Customer(Convert.ToInt32(reader[0]), reader[1].ToString(), reader[2].ToString(), 
+        //        reader[3].ToString(), reader[4].ToString(), reader[5].ToString());
+
+        //    reader.Close();
+        //    dbConnection.Close();
+
+        //    customer = 
+
+        //}
         
         public Order GetOrder(string orderId)
         {
@@ -347,6 +361,35 @@ namespace OnlineShop.BusinessLayer
 
             return product;
 
+        }
+
+        public List<Order> GetCustomerOrders(Customer customer)
+        {
+            string getAllOrders = $@"SELECT id, CustomerId, AmountToPay, DateOfOrder, Status "+
+                $@"FROM [dbo].[Orders] WHERE CustomerId='{customer.CustomerId}'";
+
+            List<Order> orders = new List<Order>();
+
+            SqlConnection dbConnection = new SqlConnection(connectionString);
+
+            SqlCommand command = new SqlCommand(getAllOrders, dbConnection);
+
+            dbConnection.Open();
+
+            SqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                Dictionary<Product, int> orderProducts = GetOrderProducts(Convert.ToInt32(reader[0]));
+
+                Order order = new Order(Convert.ToInt32(reader[0]), customer, Convert.ToDecimal(reader[2]), 
+                    orderProducts, Convert.ToDateTime(reader[3]), Convert.ToBoolean(reader[4]));
+
+                orders.Add(order);
+            }
+            reader.Close();
+            dbConnection.Dispose();
+
+            return orders;
         }
 
         private Dictionary<Product, int> GetOrderProducts(int orderId)
