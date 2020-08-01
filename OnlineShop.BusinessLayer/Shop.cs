@@ -112,6 +112,7 @@ namespace OnlineShop.BusinessLayer
             string password = controller.GetPassword();
 
             Customer newCustomer = new Customer(id, name, surname, address, email, password);
+            database.AddCustomer(newCustomer);
         }
 
         public void ProgramRunning()
