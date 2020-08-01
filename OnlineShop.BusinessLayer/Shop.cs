@@ -19,7 +19,11 @@ namespace OnlineShop.BusinessLayer
 
         private void DisplayStartingMenu()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Welcome to Eshop!");
+            Console.WriteLine("1. Login");
+            Console.WriteLine("2. Sign Up");
+            Console.WriteLine("3. Exit");
+            Console.ReadLine();
         }
 
         public bool IsEmployee()
