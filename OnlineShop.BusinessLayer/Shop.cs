@@ -39,9 +39,14 @@ namespace OnlineShop.BusinessLayer
             }
         }
 
-        private void ShowProduct(Product product)
+        private string ShowProduct(string productName)
         {
-            throw new NotImplementedException();
+            List<Product> products = database.GetProduct(productName);
+            Product product = products[0];
+            return
+                $"ID: {product.ProductId}, Type: {product.Type}, " +
+                $"Name: {product.ProductName}, Price: {product.Price}, " +
+                $"In stock: {product.Stock}";
         }
 
         private IEnumerable<string> ShowAllCustomers()
@@ -55,9 +60,12 @@ namespace OnlineShop.BusinessLayer
             }
         }
 
-        private void ShowCustomer(Customer customer)
+        private string ShowCustomer(int customerId)
         {
-            throw new NotImplementedException();
+            Customer customer = database.GetCustomer(customerId);
+            return
+                $"ID: {customer.CustomerId}, {customer.Name} {customer.Surname}\n" +
+                $"e-mail: {customer.Email}";
         }
 
         private IEnumerable<string> ShowAllOrders()
@@ -72,9 +80,13 @@ namespace OnlineShop.BusinessLayer
             }
         }
 
-        private void FindOrder(Order order)
+        private string FindOrder(string orderId)
         {
-            throw new NotImplementedException();
+            Order order = database.GetOrder(orderId);
+            return
+                $"ID: {order.OrderId}, Date: {order.DateOfOrder}, " +
+                $"Product: {order.Products}, Count: {order.OrderCount}, " +
+                $"Customer: {order.Customer}, Sent: {order.IsSend}";
         }
 
         private void CreateAccount()
@@ -124,18 +136,6 @@ namespace OnlineShop.BusinessLayer
                 }
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
 
     }
 }
