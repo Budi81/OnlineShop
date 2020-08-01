@@ -19,12 +19,22 @@ namespace OnlineShop.BusinessLayer
             this.controller = controller;
         }
 
-        private void DisplayStartingMenu()
+        private int DisplayStartingMenu()
+        {
+            int userChoice = controller.UserChoice(
+                "Welcome to E-Shop!\n" +
+                "What do you want to do?\n" +
+                "  (1) Login\n" +
+                "  (2) Sign in\n" +
+                "  (3) Exit");
+            return userChoice;
+        }
+
+        private void UserLogin()
         {
             userLogin = controller.GetInput("Login: ");
             userPassword = controller.GetPassword();
         }
-
         public bool IsEmployee()
         {
             return (userLogin == Employee.Login && userPassword == Employee.Password);
@@ -108,11 +118,30 @@ namespace OnlineShop.BusinessLayer
         {
             while (isRunning)
             {
-                DisplayStartingMenu();
+                int userChoice = DisplayStartingMenu();
+
+                switch (userChoice)
+                {
+                    case 1:
+                        UserLogin();
+                        break;
+                    case 2:
+                        CreateAccount();
+                        break;
+                    case 3:
+                        break;
+                    default:
+                        controller.DisplayError("Wrong choice!", 1000);
+                        break;
+                }
 
                 if (IsEmployee())
                 {
-                    switch (controller.UserChoice())
+                    switch (controller.UserChoice(
+                        "Hi Mark!" +
+                        "What do you want to do today?\n" +
+                        "  (1) Show all orders\n" +
+                        "  (2) ..."))
                     {
                         case 1:
                             ShowAllOrders();
@@ -132,7 +161,10 @@ namespace OnlineShop.BusinessLayer
                 }
                 else
                 {
-                    switch (controller.UserChoice())
+                    switch (controller.UserChoice(
+                        $"Hello {userLogin}!\n" +
+                        $"How may I help you?\n" +
+                        $"  (1) ..."))
                     {
                         case 1:
 
