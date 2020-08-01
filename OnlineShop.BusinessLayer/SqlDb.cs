@@ -12,7 +12,8 @@ namespace OnlineShop.BusinessLayer
 
         public void AddCustomer(Customer customer)
         {
-            string addCustomerCommand = $@"INSERT INTO [dbo].[Customers] (FirstName, LastName, Adress, Email, password) values ('{customer.Name}', '{customer.Surname}', '{customer.Address}', '{customer.Email}', '{customer.Password}')";
+            string addCustomerCommand = $@"INSERT INTO [dbo].[Customers] (FirstName, LastName, Adress, Email, password) "
+                +$@"values ('{customer.Name}', '{customer.Surname}', '{customer.Address}', '{customer.Email}', '{customer.Password}')";
 
             SqlConnection dbConnection = new SqlConnection(connectionString);
 
