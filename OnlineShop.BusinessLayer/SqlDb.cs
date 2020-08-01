@@ -383,7 +383,6 @@ namespace OnlineShop.BusinessLayer
 
             return productAttributes;
         }
-
     }  
 }
 
