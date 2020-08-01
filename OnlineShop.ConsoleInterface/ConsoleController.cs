@@ -8,9 +8,16 @@ namespace OnlineShop.ConsoleInterface
 {
     public class ConsoleController : IController
     {
-        public int UserChoice()
+        public int UserChoice(string message)
         {
-            throw new NotImplementedException();
+            bool output;
+            do
+            {
+                Console.WriteLine(message);
+                Console.Write("> ");
+                output = int.TryParse(Console.ReadLine(), out int result);
+                return result;
+            } while (!output);
         }
 
         public void DisplayError(string massage, int milliseconds)
