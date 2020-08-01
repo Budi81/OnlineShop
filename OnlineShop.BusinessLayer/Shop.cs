@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace OnlineShop.BusinessLayer
 {
@@ -26,9 +27,16 @@ namespace OnlineShop.BusinessLayer
             throw new NotImplementedException();
         }
 
-        private void ShowAllProducts()
+        private IEnumerable<string> ShowAllProducts()
         {
-            throw new NotImplementedException();
+            List<Product> products = database.GetAllProducts();
+            foreach (var product in products)
+            {
+                yield return
+                    $"ID: {product.ProductId}, Type: {product.Type}, " +
+                    $"Name: {product.ProductName}, Price: {product.Price}, " +
+                    $"In stock: {product.Stock}";
+            }
         }
 
         private void ShowProduct(Product product)
@@ -36,9 +44,15 @@ namespace OnlineShop.BusinessLayer
             throw new NotImplementedException();
         }
 
-        private void ShowAllCustomers()
+        private IEnumerable<string> ShowAllCustomers()
         {
-            throw new NotImplementedException();
+            List<Customer> allCustomers = database.GetAllCustomers();
+            foreach (var customer in allCustomers)
+            {
+                yield return
+                    $"ID: {customer.CustomerId}, {customer.Name} {customer.Surname}\n" +
+                    $"e-mail: {customer.Email}";
+            }
         }
 
         private void ShowCustomer(Customer customer)
@@ -46,9 +60,16 @@ namespace OnlineShop.BusinessLayer
             throw new NotImplementedException();
         }
 
-        private void ShowAllOrders()
+        private IEnumerable<string> ShowAllOrders()
         {
-            throw new NotImplementedException();
+            List<Order> orders = database.GetAllOrders();
+            foreach (var order in orders)
+            {
+                yield return
+                    $"ID: {order.OrderId}, Date: {order.DateOfOrder}, " +
+                    $"Product: {order.Products}, Count: {order.OrderCount}, " +
+                    $"Customer: {order.Customer}, Sent: {order.IsSend}";
+            }
         }
 
         private void FindOrder(Order order)
