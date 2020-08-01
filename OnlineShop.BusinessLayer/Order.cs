@@ -34,7 +34,7 @@ namespace OnlineShop.BusinessLayer
         public Customer Customer { get => customer; private set => customer = value; }
         public DateTime DateOfOrder { get => dateOfOrder; set => dateOfOrder = value; }
 
-        public static Order fromShoppingCart(ShoppingCart shoppingCart, Customer customer)
+        public static Order FromShoppingCart(ShoppingCart shoppingCart, Customer customer)
         {
             decimal orderCount = 0;
             foreach (KeyValuePair<Product, int> keyValuePair in shoppingCart.Products)
@@ -50,7 +50,7 @@ namespace OnlineShop.BusinessLayer
             return newOrder;
         } 
 
-        public Order withId(int newId)
+        public Order WithId(int newId)
         {
             return new Order(newId, this.Customer, this.OrderCount, this.Products, this.dateOfOrder, this.isSend);
         }

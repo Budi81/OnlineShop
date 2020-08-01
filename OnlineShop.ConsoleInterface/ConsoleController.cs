@@ -6,17 +6,17 @@ using System.Threading;
 
 namespace OnlineShop.ConsoleInterface
 {
-    public class ConsoleControler :IControler
+    public class ConsoleController :IController
     {
         public int UserChoice()
         {
             throw new NotImplementedException();
         }
 
-        public void DisplayError(string massage, int miliseconds)
+        public void DisplayError(string massage, int milliseconds)
         {
             Console.WriteLine(massage);
-            Thread.Sleep(miliseconds);
+            Thread.Sleep(milliseconds);
         }
 
         public void WriteOutData(string message)

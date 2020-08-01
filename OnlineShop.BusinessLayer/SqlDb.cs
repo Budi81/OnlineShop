@@ -12,7 +12,7 @@ namespace OnlineShop.BusinessLayer
 
         public void AddCustomer(Customer customer)
         {
-            string addCustomerCommand = $@"INSERT INTO [dbo].[Customers] values (null, {customer.Name}, {customer.Surname}, {customer.Adress}, {customer.Email}, {customer.Password})";
+            string addCustomerCommand = $@"INSERT INTO [dbo].[Customers] values (null, {customer.Name}, {customer.Surname}, {customer.Address}, {customer.Email}, {customer.Password})";
 
             SqlConnection dbConnection = new SqlConnection(connectionString);
 
@@ -38,7 +38,7 @@ namespace OnlineShop.BusinessLayer
 
             int newId = (int)command.ExecuteScalar();
 
-            order = order.withId(newId);
+            order = order.WithId(newId);
 
             foreach (KeyValuePair<Product, int> keyValues in order.Products)
             {
@@ -73,13 +73,13 @@ namespace OnlineShop.BusinessLayer
             return product;
         }
 
-        public void DelateCustomer(Customer customer)
+        public void DeleteCustomer(Customer customer)
         {
-            string delateCustomer = $@"DELETE FROM [dbo].[Customers] WHERE CustomerId ={customer.CustomerId}";
+            string deleteCustomer = $@"DELETE FROM [dbo].[Customers] WHERE CustomerId ={customer.CustomerId}";
 
             SqlConnection dbConnection = new SqlConnection(connectionString);
 
-            SqlCommand command = new SqlCommand(delateCustomer, dbConnection);
+            SqlCommand command = new SqlCommand(deleteCustomer, dbConnection);
 
             dbConnection.Open();
 
@@ -88,21 +88,21 @@ namespace OnlineShop.BusinessLayer
             dbConnection.Dispose();
         }
 
-        public void DelateOrder(Order order)
+        public void DeleteOrder(Order order)
         {
-            string delateOrder = $@"DELETE FROM [dbo].[Orders] WHERE id ={order.OrderId}";
+            string deleteOrder = $@"DELETE FROM [dbo].[Orders] WHERE id ={order.OrderId}";
 
             SqlConnection dbConnection = new SqlConnection(connectionString);
 
-            SqlCommand command = new SqlCommand(delateOrder, dbConnection);
+            SqlCommand command = new SqlCommand(deleteOrder, dbConnection);
 
             dbConnection.Open();
 
             command.ExecuteNonQuery();
 
-            string delateOrderProduct = $@"DELETE FROM [dbo].[OrderProduct] WHERE OrderId ={order.OrderId}";
+            string deleteOrderProduct = $@"DELETE FROM [dbo].[OrderProduct] WHERE OrderId ={order.OrderId}";
 
-            SqlCommand command2 = new SqlCommand(delateOrderProduct, dbConnection);
+            SqlCommand command2 = new SqlCommand(deleteOrderProduct, dbConnection);
 
             command2.ExecuteNonQuery();
 
@@ -182,7 +182,7 @@ namespace OnlineShop.BusinessLayer
             while (reader.Read())
             {
                 Dictionary<String, String> productAttributes = GetProductAttributes(Convert.ToInt32(reader[0]));
-                Product product = ProductFactory.produce(Convert.ToInt32(reader[0]), reader[1].ToString(), Convert.ToDecimal(reader[2]), Convert.ToInt32(reader[3]), (ProductType)Enum.Parse(typeof(ProductType), reader[4].ToString()), productAttributes);
+                Product product = ProductFactory.Produce(Convert.ToInt32(reader[0]), reader[1].ToString(), Convert.ToDecimal(reader[2]), Convert.ToInt32(reader[3]), (ProductType)Enum.Parse(typeof(ProductType), reader[4].ToString()), productAttributes);
 
                 products.Add(product);
             }
@@ -240,11 +240,11 @@ namespace OnlineShop.BusinessLayer
         {
             string getCustomer = $@"SELECT id, CustomerId, AmountToPay, DateOfOrder, Status FROM [dbo].[Orders] WHERE id={orderId}";
 
-            SqlConnection dbconnection = new SqlConnection(connectionString);
+            SqlConnection dbConnection = new SqlConnection(connectionString);
 
-            SqlCommand command = new SqlCommand(getCustomer, dbconnection);
+            SqlCommand command = new SqlCommand(getCustomer, dbConnection);
 
-            dbconnection.Open();
+            dbConnection.Open();
 
             SqlDataReader reader = command.ExecuteReader();
 
@@ -255,7 +255,7 @@ namespace OnlineShop.BusinessLayer
             Order order = new Order(Convert.ToInt32(reader[0]), customer, Convert.ToDecimal(reader[2]), orderProducts, Convert.ToDateTime(reader[3]), Convert.ToBoolean(reader[4]));
 
             reader.Close();
-            dbconnection.Close();
+            dbConnection.Close();
 
             return order;
         }
@@ -279,7 +279,7 @@ namespace OnlineShop.BusinessLayer
             while (reader.Read())
             {
                 Dictionary<String, String> productAttributes = GetProductAttributes(Convert.ToInt32(reader[0]));
-                Product product = ProductFactory.produce(Convert.ToInt32(reader[0]), reader[1].ToString(), Convert.ToDecimal(reader[2]), Convert.ToInt32(reader[3]), (ProductType)Enum.Parse(typeof(ProductType), reader[4].ToString()), productAttributes);
+                Product product = ProductFactory.Produce(Convert.ToInt32(reader[0]), reader[1].ToString(), Convert.ToDecimal(reader[2]), Convert.ToInt32(reader[3]), (ProductType)Enum.Parse(typeof(ProductType), reader[4].ToString()), productAttributes);
 
                 products.Add(product);
             }
@@ -304,7 +304,7 @@ namespace OnlineShop.BusinessLayer
 
    
             Dictionary<String, String> productAttributes = GetProductAttributes(Convert.ToInt32(reader[0]));
-            product = ProductFactory.produce(Convert.ToInt32(reader[0]), reader[1].ToString(), Convert.ToDecimal(reader[2]), Convert.ToInt32(reader[3]), (ProductType)Enum.Parse(typeof(ProductType), reader[4].ToString()), productAttributes);
+            product = ProductFactory.Produce(Convert.ToInt32(reader[0]), reader[1].ToString(), Convert.ToDecimal(reader[2]), Convert.ToInt32(reader[3]), (ProductType)Enum.Parse(typeof(ProductType), reader[4].ToString()), productAttributes);
      
             reader.Close();
             dbConnection.Close();

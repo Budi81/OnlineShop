@@ -9,12 +9,12 @@ namespace OnlineShop.BusinessLayer
 
         private IDatabase database;
 
-        private IControler controler;
+        private IController controller;
 
-        public Shop(IDatabase database, IControler controler)
+        public Shop(IDatabase database, IController controller)
         {
             this.database = database;
-            this.controler = controler;
+            this.controller = controller;
         }
 
         private void DisplayStartingMenu()
@@ -32,7 +32,7 @@ namespace OnlineShop.BusinessLayer
             List<Product> products = database.GetAllProducts();
             foreach (var product in products)
             {
-                controler.WriteOutData(
+                controller.WriteOutData(
                     $"ID: {product.ProductId}, Type: {product.Type}, " +
                     $"Name: {product.ProductName}, Price: {product.Price}, " +
                     $"In stock: {product.Stock}");
@@ -43,7 +43,7 @@ namespace OnlineShop.BusinessLayer
         {
             List<Product> products = database.GetProduct(productName);
             Product product = products[0];
-            controler.WriteOutData(
+            controller.WriteOutData(
                 $"ID: {product.ProductId}, Type: {product.Type}, " +
                 $"Name: {product.ProductName}, Price: {product.Price}, " +
                 $"In stock: {product.Stock}");
@@ -54,7 +54,7 @@ namespace OnlineShop.BusinessLayer
             List<Customer> allCustomers = database.GetAllCustomers();
             foreach (var customer in allCustomers)
             {
-                controler.WriteOutData(
+                controller.WriteOutData(
                     $"ID: {customer.CustomerId}, {customer.Name} {customer.Surname}\n" +
                     $"e-mail: {customer.Email}");
             }
@@ -63,7 +63,7 @@ namespace OnlineShop.BusinessLayer
         private void ShowCustomer(int customerId)
         {
             Customer customer = database.GetCustomer(customerId);
-            controler.WriteOutData(
+            controller.WriteOutData(
                 $"ID: {customer.CustomerId}, {customer.Name} {customer.Surname}\n" +
                 $"e-mail: {customer.Email}");
         }
@@ -73,7 +73,7 @@ namespace OnlineShop.BusinessLayer
             List<Order> orders = database.GetAllOrders();
             foreach (var order in orders)
             {
-                controler.WriteOutData(
+                controller.WriteOutData(
                     $"ID: {order.OrderId}, Date: {order.DateOfOrder}, " +
                     $"Product: {order.Products}, Count: {order.OrderCount}, " +
                     $"Customer: {order.Customer}, Sent: {order.IsSend}");
@@ -83,7 +83,7 @@ namespace OnlineShop.BusinessLayer
         private void FindOrder(string orderId)
         {
             Order order = database.GetOrder(orderId);
-            controler.WriteOutData(
+            controller.WriteOutData(
                 $"ID: {order.OrderId}, Date: {order.DateOfOrder}, " +
                 $"Product: {order.Products}, Count: {order.OrderCount}, " +
                 $"Customer: {order.Customer}, Sent: {order.IsSend}");
@@ -102,7 +102,7 @@ namespace OnlineShop.BusinessLayer
 
                 if (IsEmployee())
                 {
-                    switch (controler.UserChoice())
+                    switch (controller.UserChoice())
                     {
                         case 1:
                             ShowAllOrders();
@@ -114,7 +114,7 @@ namespace OnlineShop.BusinessLayer
                             break;
 
                         default:
-                            controler.DisplayError("Wrong choice!", 1000);
+                            controller.DisplayError("Wrong choice!", 1000);
 
                             break;
                     }
@@ -122,13 +122,13 @@ namespace OnlineShop.BusinessLayer
                 }
                 else
                 {
-                    switch (controler.UserChoice())
+                    switch (controller.UserChoice())
                     {
                         case 1:
 
                             break;
                         default:
-                            controler.DisplayError("Wrong choice!", 1000);
+                            controller.DisplayError("Wrong choice!", 1000);
 
                             break;
                     }

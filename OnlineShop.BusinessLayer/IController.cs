@@ -4,11 +4,11 @@ using System.Text;
 
 namespace OnlineShop.BusinessLayer
 {
-    public interface IControler
+    public interface IController
     {
         int UserChoice();
 
-        void DisplayError(string massage, int miliseconds);
+        void DisplayError(string massage, int milliseconds);
 
         void WriteOutData(string message);
     }

@@ -12,9 +12,9 @@ namespace OnlineShop.BusinessLayer
 
          Product AddProduct(Product product);
 
-         void DelateCustomer(Customer customer);
+         void DeleteCustomer(Customer customer);
 
-         void DelateOrder(Order order);
+         void DeleteOrder(Order order);
 
          List<Customer> GetAllCustomers();
 

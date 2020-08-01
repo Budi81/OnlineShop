@@ -10,18 +10,18 @@ namespace OnlineShop.BusinessLayer
 
         private string name;
         private string surname;
-        private string adress;
+        private string address;
         private string email;
         private string password;
 
         private ShoppingCart chart;
 
-        public Customer(int customerId, string name, string surname, string adress, string email, string password)
+        public Customer(int customerId, string name, string surname, string address, string email, string password)
         {
             this.Id = customerId;
             Name = name;
             Surname = surname;
-            Adress = adress;
+            Address = address;
             Email = email;
             Password = password;
             Chart = new ShoppingCart();
@@ -29,7 +29,7 @@ namespace OnlineShop.BusinessLayer
 
         public string Name { get => name; private set => name = value; }
         public string Surname { get => surname; private set => surname = value; }
-        public string Adress { get => adress; private set => adress = value; }
+        public string Address { get => address; private set => address = value; }
         public string Email { get => email; private set => email = value; }
         public string Password { get => password; set => password = value; }
         
@@ -47,9 +47,9 @@ namespace OnlineShop.BusinessLayer
             this.Surname = surname;
         }
 
-        public void ModifyAdress(string adress)
+        public void ModifyAddress(string address)
         {
-            this.Adress = adress;
+            this.Address = address;
         }
 
         public void ModifyEmail(string email)
