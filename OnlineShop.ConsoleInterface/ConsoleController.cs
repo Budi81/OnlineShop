@@ -24,9 +24,9 @@ namespace OnlineShop.ConsoleInterface
             Console.WriteLine(message);
         }
 
-        public string GetLogin()
+        public string GetInput(string message)
         {
-            Console.Write("Login: ");
+            Console.Write(message);
             return Console.ReadLine();
         }
 

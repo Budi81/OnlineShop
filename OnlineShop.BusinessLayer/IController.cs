@@ -12,7 +12,7 @@ namespace OnlineShop.BusinessLayer
 
         void WriteOutData(string message);
 
-        string GetLogin();
+        string GetInput(string message);
 
         string GetPassword();
     }

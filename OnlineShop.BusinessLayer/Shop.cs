@@ -21,7 +21,7 @@ namespace OnlineShop.BusinessLayer
 
         private void DisplayStartingMenu()
         {
-            userLogin = controller.GetLogin();
+            userLogin = controller.GetInput("Login: ");
             userPassword = controller.GetPassword();
         }
 
@@ -94,7 +94,14 @@ namespace OnlineShop.BusinessLayer
 
         private void CreateAccount()
         {
-            throw new NotImplementedException();
+            int id = 0;
+            string name = controller.GetInput("Name: ");
+            string surname = controller.GetInput("Surname: ");
+            string address = controller.GetInput("Address: ");
+            string email = controller.GetInput("E-mail: ");
+            string password = controller.GetPassword();
+
+            Customer newCustomer = new Customer(id, name, surname, address, email, password);
         }
 
         public void ProgramRunning()
