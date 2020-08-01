@@ -22,7 +22,7 @@ namespace OnlineShop.BusinessLayer
 
          List<Product> GetAllProducts();
 
-         List<Customer> GetCustomer(string name, string surname);
+         List<Customer> GetCustomers(string name, string surname);
 
          Customer GetCustomer(int customerId);
 
