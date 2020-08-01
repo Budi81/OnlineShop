@@ -9,7 +9,12 @@ namespace OnlineShop.BusinessLayer.Products
     class ProductFactory
     {
 
-        public static Product Produce(int id, string name, decimal price, int stock, ProductType type, Dictionary<String, String> attributes)
+        public static Product Produce(int id,
+            string name,
+            decimal price,
+            int stock,
+            ProductType type,
+            Dictionary<String, String> attributes)
         {
             switch(type)
             {
@@ -19,9 +24,15 @@ namespace OnlineShop.BusinessLayer.Products
             }
         }
 
-        private static Product CreateGame(int id, string name, decimal price, int stock, ProductType type, Dictionary<String, String> attributes)
+        private static Product CreateGame(int id,
+            string name,
+            decimal price,
+            int stock,
+            ProductType type,
+            Dictionary<String, String> attributes)
         {
-            GamesStorageDataDevices dataDevices = (GamesStorageDataDevices)Enum.Parse(typeof(GamesStorageDataDevices), attributes["GamesStorageDataDevices"]);
+            GamesStorageDataDevices dataDevices = (GamesStorageDataDevices) Enum.Parse(typeof(GamesStorageDataDevices),
+                attributes["GamesStorageDataDevices"]);
             GamesPlatforms platform = (GamesPlatforms)Enum.Parse(typeof(GamesPlatforms), attributes["GamesPlatform"]);
             GamesCategory category = (GamesCategory)Enum.Parse(typeof(GamesCategory), attributes["GamesCategory"]);
 

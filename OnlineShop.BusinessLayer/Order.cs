@@ -18,7 +18,12 @@ namespace OnlineShop.BusinessLayer
 
         private bool isSend;
 
-        public Order(int orderId, Customer customer, decimal orderCount, Dictionary<Product, int> products, DateTime dateOfOrder, bool isSend)
+        public Order(int orderId,
+            Customer customer,
+            decimal orderCount,
+            Dictionary<Product, int> products,
+            DateTime dateOfOrder,
+            bool isSend)
         {
             OrderId = orderId;
             Customer = customer;

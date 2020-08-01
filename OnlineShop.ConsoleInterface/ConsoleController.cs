@@ -51,6 +51,7 @@ namespace OnlineShop.ConsoleInterface
 
                 password += key.KeyChar;
             }
+            Console.WriteLine();
             return password;
         }
 

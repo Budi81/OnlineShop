@@ -109,6 +109,7 @@ namespace OnlineShop.BusinessLayer
             string surname = controller.GetInput("Surname: ");
             string address = controller.GetInput("Address: ");
             string email = controller.GetInput("E-mail: ");
+            userLogin = email;
             string password = controller.GetPassword();
 
             Customer newCustomer = new Customer(id, name, surname, address, email, password);
