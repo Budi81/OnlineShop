@@ -12,7 +12,7 @@ namespace OnlineShop.BusinessLayer
 
         public void AddCustomer(Customer customer)
         {
-            string addCustomerCommand = $@"INSERT INTO [dbo].[Customers] values (null, {customer.Name}, {customer.Surname}, {customer.Address}, {customer.Email}, {customer.Password})";
+            string addCustomerCommand = $@"INSERT INTO [dbo].[Customers] (FirstName, LastName, Adress, Email, password) values ('{customer.Name}', '{customer.Surname}', '{customer.Address}', '{customer.Email}', '{customer.Password}')";
 
             SqlConnection dbConnection = new SqlConnection(connectionString);
 
@@ -27,7 +27,8 @@ namespace OnlineShop.BusinessLayer
 
         public Order AddOrder(Order order)
         {
-            string addOrderCommand = $@"INSERT INTO [dbo].[Orders] (CustomerId, AmountToPay, DateOfOrder, Status) values ({order.Customer.CustomerId}, {order.OrderCount}, {order.DateOfOrder}, {order.IsSend});"
+            string addOrderCommand = "INSERT INTO [dbo].[Orders] (CustomerId, AmountToPay, DateOfOrder, Status) "
+                + $@"values ('{order.Customer.CustomerId}', '{order.OrderCount}', '{order.DateOfOrder}', '{order.IsSend}'); "
                 + "SELECT CAST(scope_identity() AS int)";
 
             SqlConnection dbConnection = new SqlConnection(connectionString);
@@ -42,8 +43,9 @@ namespace OnlineShop.BusinessLayer
 
             foreach (KeyValuePair<Product, int> keyValues in order.Products)
             {
-                string addOrderProduct = $@"INSERT INTO [dbo].[OrderProduct] (OrderId, ProductId, Count) values ({order.OrderId}, {keyValues.Key.ProductId}, {keyValues.Value};"
-                   + " SELECT CAST(scope_identity() AS int)";
+                string addOrderProduct = $@"INSERT INTO [dbo].[OrderProduct] (OrderId, ProductId, Count) "
+                    + $@"values ('{order.OrderId}', '{keyValues.Key.ProductId}', '{keyValues.Value}'; "
+                    + "SELECT CAST(scope_identity() AS int)";
 
                 SqlCommand command2 = new SqlCommand(addOrderProduct, dbConnection);
 
@@ -56,7 +58,8 @@ namespace OnlineShop.BusinessLayer
 
         public Product AddProduct(Product product)
         {
-            string addProduct = $@"INSERT INTO [dbo].[Products] (ProductName, ProductPrice, Stock) values ({product.ProductName}, {product.Price}, {product.Stock})";
+            string addProduct = $@"INSERT INTO [dbo].[Products] (ProductName, ProductPrice, Stock) "
+                + $@"values ('{product.ProductName}', '{product.Price}', '{product.Stock}')";
 
             SqlConnection dbConnection = new SqlConnection(connectionString);
 
@@ -75,7 +78,7 @@ namespace OnlineShop.BusinessLayer
 
         public void DeleteCustomer(Customer customer)
         {
-            string deleteCustomer = $@"DELETE FROM [dbo].[Customers] WHERE CustomerId ={customer.CustomerId}";
+            string deleteCustomer = $@"DELETE FROM [dbo].[Customers] WHERE CustomerId ='{customer.CustomerId}'";
 
             SqlConnection dbConnection = new SqlConnection(connectionString);
 
@@ -90,7 +93,7 @@ namespace OnlineShop.BusinessLayer
 
         public void DeleteOrder(Order order)
         {
-            string deleteOrder = $@"DELETE FROM [dbo].[Orders] WHERE id ={order.OrderId}";
+            string deleteOrder = $@"DELETE FROM [dbo].[Orders] WHERE id ='{order.OrderId}'";
 
             SqlConnection dbConnection = new SqlConnection(connectionString);
 
@@ -100,7 +103,7 @@ namespace OnlineShop.BusinessLayer
 
             command.ExecuteNonQuery();
 
-            string deleteOrderProduct = $@"DELETE FROM [dbo].[OrderProduct] WHERE OrderId ={order.OrderId}";
+            string deleteOrderProduct = $@"DELETE FROM [dbo].[OrderProduct] WHERE OrderId ='{order.OrderId}'";
 
             SqlCommand command2 = new SqlCommand(deleteOrderProduct, dbConnection);
 
@@ -192,7 +195,8 @@ namespace OnlineShop.BusinessLayer
         
         public List<Customer> GetCustomers(string name, string surname)
         {
-            string getCustomer = $@"SELECT CustomerId, FirstName, LastName, Adress, Email, Password FROM [dbo].[Customers] WHERE FirstName={name} and LastName={surname}";
+            string getCustomer = $@"SELECT CustomerId, FirstName, LastName, Adress, Email, Password "
+                +$@"FROM [dbo].[Customers] WHERE FirstName='{name}' and LastName='{surname}'";
 
             List<Customer> customers = new List<Customer>();
             
@@ -218,7 +222,8 @@ namespace OnlineShop.BusinessLayer
 
         public Customer GetCustomer(int customerId)
         {
-            string getCustomer = $@"SELECT CustomerId, FirstName, LastName, Adress, Email, Password FROM [dbo].[Customers] WHERE CustomerId={customerId}";
+            string getCustomer = $@"SELECT CustomerId, FirstName, LastName, Adress, Email, Password "
+                +$@"FROM [dbo].[Customers] WHERE CustomerId='{customerId}'";
 
             SqlConnection dbConnection = new SqlConnection(connectionString);
 
@@ -228,7 +233,8 @@ namespace OnlineShop.BusinessLayer
 
             SqlDataReader reader = command.ExecuteReader();
 
-            Customer customer = new Customer(Convert.ToInt32(reader[0]), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), reader[4].ToString(), reader[5].ToString());
+            Customer customer = new Customer(Convert.ToInt32(reader[0]), reader[1].ToString(), reader[2].ToString(), 
+                reader[3].ToString(), reader[4].ToString(), reader[5].ToString());
 
             reader.Close();
             dbConnection.Close();
@@ -238,7 +244,8 @@ namespace OnlineShop.BusinessLayer
 
         public Customer GetCustomer(string email, string password)
         {
-            string getCustomer = $@"SELECT CustomerId, FirstName, LastName, Adress, Email, Password FROM [dbo].[Customers] WHERE Email={email} and Password={password}";
+            string getCustomer = $@"SELECT CustomerId, FirstName, LastName, Adress, Email, Password "
+                +$@"FROM [dbo].[Customers] WHERE Email='{email}' and Password='{password}'";
 
             SqlConnection dbConnection = new SqlConnection(connectionString);
 
@@ -248,7 +255,8 @@ namespace OnlineShop.BusinessLayer
 
             SqlDataReader reader = command.ExecuteReader();
 
-            Customer customer = new Customer(Convert.ToInt32(reader[0]), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), reader[4].ToString(), reader[5].ToString());
+            Customer customer = new Customer(Convert.ToInt32(reader[0]), reader[1].ToString(), reader[2].ToString(), 
+                reader[3].ToString(), reader[4].ToString(), reader[5].ToString());
 
             reader.Close();
             dbConnection.Close();
@@ -259,7 +267,7 @@ namespace OnlineShop.BusinessLayer
         
         public Order GetOrder(string orderId)
         {
-            string getCustomer = $@"SELECT id, CustomerId, AmountToPay, DateOfOrder, Status FROM [dbo].[Orders] WHERE id={orderId}";
+            string getCustomer = $@"SELECT id, CustomerId, AmountToPay, DateOfOrder, Status FROM [dbo].[Orders] WHERE id='{orderId}'";
 
             SqlConnection dbConnection = new SqlConnection(connectionString);
 
@@ -273,7 +281,8 @@ namespace OnlineShop.BusinessLayer
 
             Customer customer = GetCustomer(Convert.ToInt32(reader[1]));
 
-            Order order = new Order(Convert.ToInt32(reader[0]), customer, Convert.ToDecimal(reader[2]), orderProducts, Convert.ToDateTime(reader[3]), Convert.ToBoolean(reader[4]));
+            Order order = new Order(Convert.ToInt32(reader[0]), customer, Convert.ToDecimal(reader[2]), 
+                orderProducts, Convert.ToDateTime(reader[3]), Convert.ToBoolean(reader[4]));
 
             reader.Close();
             dbConnection.Close();
@@ -285,7 +294,8 @@ namespace OnlineShop.BusinessLayer
 
 
         {
-            string getProducts = $@"SELECT ProductId, ProductName, ProductPrice, Stock, Type FROM [dbo].[Products] WHERE ProductName LIKE {productName}";
+            string getProducts = $@"SELECT ProductId, ProductName, ProductPrice, Stock, Type "
+                +$@"FROM [dbo].[Products] WHERE ProductName LIKE '{productName}'";
 
             List<Product> products = new List<Product>();
 
@@ -300,7 +310,9 @@ namespace OnlineShop.BusinessLayer
             while (reader.Read())
             {
                 Dictionary<String, String> productAttributes = GetProductAttributes(Convert.ToInt32(reader[0]));
-                Product product = ProductFactory.Produce(Convert.ToInt32(reader[0]), reader[1].ToString(), Convert.ToDecimal(reader[2]), Convert.ToInt32(reader[3]), (ProductType)Enum.Parse(typeof(ProductType), reader[4].ToString()), productAttributes);
+                Product product = ProductFactory.Produce(Convert.ToInt32(reader[0]), reader[1].ToString(), 
+                    Convert.ToDecimal(reader[2]), Convert.ToInt32(reader[3]), (ProductType)Enum.Parse(typeof(ProductType), 
+                    reader[4].ToString()), productAttributes);
 
                 products.Add(product);
             }
@@ -311,7 +323,7 @@ namespace OnlineShop.BusinessLayer
 
         public Product GetProduct(int productId)
         {
-            string getProduct = $@"SELECT ProductId, ProductName, ProductPrice, Stock, Type FROM [dbo].[Products] WHERE ProductId={productId}";
+            string getProduct = $@"SELECT ProductId, ProductName, ProductPrice, Stock, Type FROM [dbo].[Products] WHERE ProductId='{productId}'";
 
             SqlConnection dbConnection = new SqlConnection(connectionString);
 
@@ -325,7 +337,9 @@ namespace OnlineShop.BusinessLayer
 
    
             Dictionary<String, String> productAttributes = GetProductAttributes(Convert.ToInt32(reader[0]));
-            product = ProductFactory.Produce(Convert.ToInt32(reader[0]), reader[1].ToString(), Convert.ToDecimal(reader[2]), Convert.ToInt32(reader[3]), (ProductType)Enum.Parse(typeof(ProductType), reader[4].ToString()), productAttributes);
+            product = ProductFactory.Produce(Convert.ToInt32(reader[0]), reader[1].ToString(), 
+                Convert.ToDecimal(reader[2]), Convert.ToInt32(reader[3]), (ProductType)Enum.Parse(typeof(ProductType), 
+                reader[4].ToString()), productAttributes);
      
             reader.Close();
             dbConnection.Close();
@@ -336,7 +350,7 @@ namespace OnlineShop.BusinessLayer
 
         private Dictionary<Product, int> GetOrderProducts(int orderId)
         {
-            string getOrderProducts = $@"SELECT Id, ProductId, Count FROM [dbo].[OrderProduct] WHERE OrderId={orderId}";
+            string getOrderProducts = $@"SELECT Id, ProductId, Count FROM [dbo].[OrderProduct] WHERE OrderId='{orderId}'";
 
             Dictionary<Product, int> orderProducts = new Dictionary<Product, int>();
 
@@ -362,7 +376,7 @@ namespace OnlineShop.BusinessLayer
 
         private Dictionary<String, String> GetProductAttributes(int productId)
         {
-            string getOrderProducts = $@"SELECT Name, Value FROM [dbo].[ProductAttributes] WHERE ProductId={productId}";
+            string getOrderProducts = $@"SELECT Name, Value FROM [dbo].[ProductAttributes] WHERE ProductId='{productId}'";
 
             Dictionary<String, String> productAttributes = new Dictionary<String, String>();
 
