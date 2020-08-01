@@ -27,66 +27,66 @@ namespace OnlineShop.BusinessLayer
             throw new NotImplementedException();
         }
 
-        private IEnumerable<string> ShowAllProducts()
+        private void ShowAllProducts()
         {
             List<Product> products = database.GetAllProducts();
             foreach (var product in products)
             {
-                yield return
+                controler.WriteOutData(
                     $"ID: {product.ProductId}, Type: {product.Type}, " +
                     $"Name: {product.ProductName}, Price: {product.Price}, " +
-                    $"In stock: {product.Stock}";
+                    $"In stock: {product.Stock}");
             }
         }
 
-        private string ShowProduct(string productName)
+        private void ShowProduct(string productName)
         {
             List<Product> products = database.GetProduct(productName);
             Product product = products[0];
-            return
+            controler.WriteOutData(
                 $"ID: {product.ProductId}, Type: {product.Type}, " +
                 $"Name: {product.ProductName}, Price: {product.Price}, " +
-                $"In stock: {product.Stock}";
+                $"In stock: {product.Stock}");
         }
 
-        private IEnumerable<string> ShowAllCustomers()
+        private void ShowAllCustomers()
         {
             List<Customer> allCustomers = database.GetAllCustomers();
             foreach (var customer in allCustomers)
             {
-                yield return
+                controler.WriteOutData(
                     $"ID: {customer.CustomerId}, {customer.Name} {customer.Surname}\n" +
-                    $"e-mail: {customer.Email}";
+                    $"e-mail: {customer.Email}");
             }
         }
 
-        private string ShowCustomer(int customerId)
+        private void ShowCustomer(int customerId)
         {
             Customer customer = database.GetCustomer(customerId);
-            return
+            controler.WriteOutData(
                 $"ID: {customer.CustomerId}, {customer.Name} {customer.Surname}\n" +
-                $"e-mail: {customer.Email}";
+                $"e-mail: {customer.Email}");
         }
 
-        private IEnumerable<string> ShowAllOrders()
+        private void ShowAllOrders()
         {
             List<Order> orders = database.GetAllOrders();
             foreach (var order in orders)
             {
-                yield return
+                controler.WriteOutData(
                     $"ID: {order.OrderId}, Date: {order.DateOfOrder}, " +
                     $"Product: {order.Products}, Count: {order.OrderCount}, " +
-                    $"Customer: {order.Customer}, Sent: {order.IsSend}";
+                    $"Customer: {order.Customer}, Sent: {order.IsSend}");
             }
         }
 
-        private string FindOrder(string orderId)
+        private void FindOrder(string orderId)
         {
             Order order = database.GetOrder(orderId);
-            return
+            controler.WriteOutData(
                 $"ID: {order.OrderId}, Date: {order.DateOfOrder}, " +
                 $"Product: {order.Products}, Count: {order.OrderCount}, " +
-                $"Customer: {order.Customer}, Sent: {order.IsSend}";
+                $"Customer: {order.Customer}, Sent: {order.IsSend}");
         }
 
         private void CreateAccount()

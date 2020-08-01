@@ -19,5 +19,10 @@ namespace OnlineShop.ConsoleInterface
             Thread.Sleep(miliseconds);
         }
 
+        public void WriteOutData(string message)
+        {
+            Console.WriteLine(message);
+        }
+
     }
 }

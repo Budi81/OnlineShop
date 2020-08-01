@@ -9,5 +9,7 @@ namespace OnlineShop.BusinessLayer
         int UserChoice();
 
         void DisplayError(string massage, int miliseconds);
+
+        void WriteOutData(string message);
     }
 }
