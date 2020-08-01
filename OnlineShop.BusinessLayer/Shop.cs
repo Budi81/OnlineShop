@@ -1,64 +1,107 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace OnlineShop.BusinessLayer
 {
     public class Shop
     {
         bool isRunning = true;
+        private string userLogin = null;
+        private string userPassword = null;
 
         private IDatabase database;
 
-        private IControler controler;
+        private IController controller;
 
-        public Shop(IDatabase database, IControler controler)
+        public Shop(IDatabase database, IController controller)
         {
             this.database = database;
-            this.controler = controler;
+            this.controller = controller;
         }
 
         private void DisplayStartingMenu()
         {
-            throw new NotImplementedException();
+            userLogin = controller.GetInput("Login: ");
+            userPassword = controller.GetPassword();
         }
 
         public bool IsEmployee()
         {
-            throw new NotImplementedException();
+            return (userLogin == Employee.Login && userPassword == Employee.Password);
         }
 
         private void ShowAllProducts()
         {
-            throw new NotImplementedException();
+            List<Product> products = database.GetAllProducts();
+            foreach (var product in products)
+            {
+                controller.WriteOutData(
+                    $"ID: {product.ProductId}, Type: {product.Type}, " +
+                    $"Name: {product.ProductName}, Price: {product.Price}, " +
+                    $"In stock: {product.Stock}");
+            }
         }
 
-        private void ShowProduct(Product product)
+        private void ShowProduct(string productName)
         {
-            throw new NotImplementedException();
+            List<Product> products = database.GetProduct(productName);
+            Product product = products[0];
+            controller.WriteOutData(
+                $"ID: {product.ProductId}, Type: {product.Type}, " +
+                $"Name: {product.ProductName}, Price: {product.Price}, " +
+                $"In stock: {product.Stock}");
         }
 
         private void ShowAllCustomers()
         {
-            throw new NotImplementedException();
+            List<Customer> allCustomers = database.GetAllCustomers();
+            foreach (var customer in allCustomers)
+            {
+                controller.WriteOutData(
+                    $"ID: {customer.CustomerId}, {customer.Name} {customer.Surname}\n" +
+                    $"e-mail: {customer.Email}");
+            }
         }
 
-        private void ShowCustomer(Customer customer)
+        private void ShowCustomer(int customerId)
         {
-            throw new NotImplementedException();
+            Customer customer = database.GetCustomer(customerId);
+            controller.WriteOutData(
+                $"ID: {customer.CustomerId}, {customer.Name} {customer.Surname}\n" +
+                $"e-mail: {customer.Email}");
         }
 
         private void ShowAllOrders()
         {
-            throw new NotImplementedException();
+            List<Order> orders = database.GetAllOrders();
+            foreach (var order in orders)
+            {
+                controller.WriteOutData(
+                    $"ID: {order.OrderId}, Date: {order.DateOfOrder}, " +
+                    $"Product: {order.Products}, Count: {order.OrderCount}, " +
+                    $"Customer: {order.Customer}, Sent: {order.IsSend}");
+            }
         }
 
-        private void FindOrder(Order order)
+        private void FindOrder(string orderId)
         {
-            throw new NotImplementedException();
+            Order order = database.GetOrder(orderId);
+            controller.WriteOutData(
+                $"ID: {order.OrderId}, Date: {order.DateOfOrder}, " +
+                $"Product: {order.Products}, Count: {order.OrderCount}, " +
+                $"Customer: {order.Customer}, Sent: {order.IsSend}");
         }
 
         private void CreateAccount()
         {
-            throw new NotImplementedException();
+            int id = 0;
+            string name = controller.GetInput("Name: ");
+            string surname = controller.GetInput("Surname: ");
+            string address = controller.GetInput("Address: ");
+            string email = controller.GetInput("E-mail: ");
+            string password = controller.GetPassword();
+
+            Customer newCustomer = new Customer(id, name, surname, address, email, password);
         }
 
         public void ProgramRunning()
@@ -69,7 +112,7 @@ namespace OnlineShop.BusinessLayer
 
                 if (IsEmployee())
                 {
-                    switch (controler.UserChoice())
+                    switch (controller.UserChoice())
                     {
                         case 1:
                             ShowAllOrders();
@@ -81,7 +124,7 @@ namespace OnlineShop.BusinessLayer
                             break;
 
                         default:
-                            controler.DisplayError("Wrong choice!", 1000);
+                            controller.DisplayError("Wrong choice!", 1000);
 
                             break;
                     }
@@ -89,13 +132,13 @@ namespace OnlineShop.BusinessLayer
                 }
                 else
                 {
-                    switch (controler.UserChoice())
+                    switch (controller.UserChoice())
                     {
                         case 1:
 
                             break;
                         default:
-                            controler.DisplayError("Wrong choice!", 1000);
+                            controller.DisplayError("Wrong choice!", 1000);
 
                             break;
                     }
@@ -103,18 +146,6 @@ namespace OnlineShop.BusinessLayer
                 }
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
 
     }
 }

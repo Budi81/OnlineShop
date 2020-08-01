@@ -9,18 +9,17 @@ namespace OnlineShop.BusinessLayer.Products
     class ProductFactory
     {
 
-        public static Product produce(int id, string name, decimal price, int stock, ProductType type, Dictionary<String, String> attributes)
+        public static Product Produce(int id, string name, decimal price, int stock, ProductType type, Dictionary<String, String> attributes)
         {
             switch(type)
             {
                 case ProductType.Game:
                 default:
-                    return createGame(id, name, price, stock, type, attributes);
-                        break;
+                    return CreateGame(id, name, price, stock, type, attributes);
             }
         }
 
-        private static Product createGame(int id, string name, decimal price, int stock, ProductType type, Dictionary<String, String> attributes)
+        private static Product CreateGame(int id, string name, decimal price, int stock, ProductType type, Dictionary<String, String> attributes)
         {
             GamesStorageDataDevices dataDevices = (GamesStorageDataDevices)Enum.Parse(typeof(GamesStorageDataDevices), attributes["GamesStorageDataDevices"]);
             GamesPlatforms platform = (GamesPlatforms)Enum.Parse(typeof(GamesPlatforms), attributes["GamesPlatform"]);
