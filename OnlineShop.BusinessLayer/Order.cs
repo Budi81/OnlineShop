@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.ConstrainedExecution;
-using System.Text;
 
 namespace OnlineShop.BusinessLayer
 {
@@ -9,7 +7,7 @@ namespace OnlineShop.BusinessLayer
     {
         private int orderId;
         private Customer customer;
-        
+
         private decimal orderCount;
 
         private Dictionary<Product, int> products;
@@ -53,7 +51,7 @@ namespace OnlineShop.BusinessLayer
             Order newOrder = new Order(orderId, customer, orderCount, shoppingCart.Products, dateOfOrder, false);
 
             return newOrder;
-        } 
+        }
 
         public Order WithId(int newId)
         {

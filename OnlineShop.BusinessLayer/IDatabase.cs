@@ -1,37 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace OnlineShop.BusinessLayer
 {
     public interface IDatabase
     {
-         void AddCustomer(Customer customer);
+        void AddCustomer(Customer customer);
 
-         Order AddOrder(Order order);
+        Order AddOrder(Order order);
 
-         Product AddProduct(Product product);
+        Product AddProduct(Product product);
 
-         void DeleteCustomer(Customer customer);
+        void DeleteCustomer(Customer customer);
 
-         void DeleteOrder(Order order);
+        void DeleteOrder(Order order);
 
-         List<Customer> GetAllCustomers();
+        List<Customer> GetAllCustomers();
 
-         List<Order> GetAllOrders();
+        List<Order> GetAllOrders();
 
-         List<Product> GetAllProducts();
+        List<Product> GetAllProducts();
 
-         List<Customer> GetCustomer(string name, string surname);
+        List<Customer> GetCustomers(string name, string surname);
 
-         Customer GetCustomer(int customerId);
+        Customer GetCustomer(int customerId);
 
-         Order GetOrder(string orderId);
+        GetCustomerResult GetCustomer(string email, string password);
 
-         List<Product> GetProduct(string productName);
+        Order GetOrder(string orderId);
 
-         Product GetProduct(int productId);
+        List<Product> GetProduct(string productName);
 
+        Product GetProduct(int productId);
 
+        List<Order> GetCustomerOrders(Customer customer);
     }
 }

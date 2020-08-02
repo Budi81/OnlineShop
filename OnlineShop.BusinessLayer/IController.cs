@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace OnlineShop.BusinessLayer
+﻿namespace OnlineShop.BusinessLayer
 {
     public interface IController
     {
-        int UserChoice(string message);
+        int UserChoiceInt(string message);
 
-        void DisplayError(string massage, int milliseconds);
+        string UserInputString(string message);
+
+        void DisplayMessage(string massage, int milliseconds);
 
         void WriteOutData(string message);
 
@@ -16,6 +14,10 @@ namespace OnlineShop.BusinessLayer
 
         string GetPassword();
 
-        void ProgramExit();
+        void DisplayCustomer(Customer customer);
+
+        void DisplayOrder(Order order);
+
+        void DisplayProduct(Product product);
     }
 }

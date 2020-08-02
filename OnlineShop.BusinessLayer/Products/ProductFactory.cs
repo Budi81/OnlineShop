@@ -2,13 +2,11 @@
 using OnlineShop.BusinessLayer.Products.Games;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace OnlineShop.BusinessLayer.Products
 {
-    class ProductFactory
+    internal class ProductFactory
     {
-
         public static Product Produce(int id,
             string name,
             decimal price,
@@ -16,7 +14,7 @@ namespace OnlineShop.BusinessLayer.Products
             ProductType type,
             Dictionary<String, String> attributes)
         {
-            switch(type)
+            switch (type)
             {
                 case ProductType.Game:
                 default:
@@ -31,7 +29,7 @@ namespace OnlineShop.BusinessLayer.Products
             ProductType type,
             Dictionary<String, String> attributes)
         {
-            GamesStorageDataDevices dataDevices = (GamesStorageDataDevices) Enum.Parse(typeof(GamesStorageDataDevices),
+            GamesStorageDataDevices dataDevices = (GamesStorageDataDevices)Enum.Parse(typeof(GamesStorageDataDevices),
                 attributes["GamesStorageDataDevices"]);
             GamesPlatforms platform = (GamesPlatforms)Enum.Parse(typeof(GamesPlatforms), attributes["GamesPlatform"]);
             GamesCategory category = (GamesCategory)Enum.Parse(typeof(GamesCategory), attributes["GamesCategory"]);

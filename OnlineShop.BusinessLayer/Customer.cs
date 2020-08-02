@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace OnlineShop.BusinessLayer
+﻿namespace OnlineShop.BusinessLayer
 {
     public class Customer
     {
@@ -32,7 +28,7 @@ namespace OnlineShop.BusinessLayer
         public string Address { get => address; private set => address = value; }
         public string Email { get => email; private set => email = value; }
         public string Password { get => password; set => password = value; }
-        
+
         public ShoppingCart Chart { get => chart; private set => chart = value; }
 
         public int CustomerId => Id;

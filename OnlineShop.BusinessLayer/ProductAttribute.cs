@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace OnlineShop.BusinessLayer
+﻿namespace OnlineShop.BusinessLayer
 {
     public class ProductAttribute
     {
-        string name;
+        private string name;
 
-        string value;
+        private string value;
 
         public ProductAttribute(string name, string value)
         {
@@ -17,7 +13,7 @@ namespace OnlineShop.BusinessLayer
         }
 
         public string Name { get => name; private set => name = value; }
-        
+
         public string Value { get => value; private set => this.value = value; }
     }
 }

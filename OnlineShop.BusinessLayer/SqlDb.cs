@@ -3,6 +3,7 @@ using OnlineShop.BusinessLayer.Products;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace OnlineShop.BusinessLayer
 {
@@ -13,7 +14,7 @@ namespace OnlineShop.BusinessLayer
         public void AddCustomer(Customer customer)
         {
             string addCustomerCommand =
-                "INSERT INTO [dbo].[Customers] (FirstName, LastName, Adress, Email, password) " + 
+                "INSERT INTO [dbo].[Customers] (FirstName, LastName, Adress, Email, password) " +
                 $@"values ('{customer.Name}', '{customer.Surname}', '{customer.Address}', " +
                 $@"'{customer.Email}', '{customer.Password}')";
 
@@ -200,22 +201,22 @@ namespace OnlineShop.BusinessLayer
                 Dictionary<String, String> productAttributes = GetProductAttributes(Convert.ToInt32(reader[0]));
                 Product product = ProductFactory.Produce(Convert.ToInt32(reader[0]), reader[1].ToString(),
                     Convert.ToDecimal(reader[2]), Convert.ToInt32(reader[3]),
-                    (ProductType) Enum.Parse(typeof(ProductType), reader[4].ToString()), productAttributes);
+                    (ProductType)Enum.Parse(typeof(ProductType), reader[4].ToString()), productAttributes);
 
                 products.Add(product);
             }
 
             return products;
         }
-        
-        public List<Customer> GetCustomer(string name, string surname)
+
+        public List<Customer> GetCustomers(string name, string surname)
         {
             string getCustomer =
-                $@"SELECT CustomerId, FirstName, LastName, Adress, Email, Password " + 
+                $@"SELECT CustomerId, FirstName, LastName, Adress, Email, Password " +
                 $@"FROM [dbo].[Customers] WHERE FirstName='{name}' and LastName='{surname}'";
 
             List<Customer> customers = new List<Customer>();
-            
+
             SqlConnection dbConnection = new SqlConnection(connectionString);
 
             SqlCommand command = new SqlCommand(getCustomer, dbConnection);
@@ -234,7 +235,6 @@ namespace OnlineShop.BusinessLayer
             dbConnection.Close();
 
             return customers;
-
         }
 
         public Customer GetCustomer(int customerId)
@@ -260,6 +260,16 @@ namespace OnlineShop.BusinessLayer
             return customer;
         }
 
+        public GetCustomerResult GetCustomer(string email, string password)
+        {
+            var customer = GetAllCustomers().FirstOrDefault(c => c.Email == email && c.Password == password);
+            if (customer == null)
+            {
+                return new GetCustomerResult();
+            }
+            return new GetCustomerResult(customer);
+        }
+
         public Order GetOrder(string orderId)
         {
             string getCustomer =
@@ -277,8 +287,8 @@ namespace OnlineShop.BusinessLayer
 
             Customer customer = GetCustomer(Convert.ToInt32(reader[1]));
 
-            Order order = new Order(Convert.ToInt32(reader[0]), customer, Convert.ToDecimal(reader[2]), orderProducts,
-                Convert.ToDateTime(reader[3]), Convert.ToBoolean(reader[4]));
+            Order order = new Order(Convert.ToInt32(reader[0]), customer, Convert.ToDecimal(reader[2]),
+                orderProducts, Convert.ToDateTime(reader[3]), Convert.ToBoolean(reader[4]));
 
             reader.Close();
             dbConnection.Close();
@@ -287,7 +297,6 @@ namespace OnlineShop.BusinessLayer
         }
 
         public List<Product> GetProduct(string productName)
-
 
         {
             string getProducts =
@@ -309,13 +318,12 @@ namespace OnlineShop.BusinessLayer
                 Dictionary<String, String> productAttributes = GetProductAttributes(Convert.ToInt32(reader[0]));
                 Product product = ProductFactory.Produce(Convert.ToInt32(reader[0]), reader[1].ToString(),
                     Convert.ToDecimal(reader[2]), Convert.ToInt32(reader[3]),
-                    (ProductType) Enum.Parse(typeof(ProductType), reader[4].ToString()), productAttributes);
+                    (ProductType)Enum.Parse(typeof(ProductType), reader[4].ToString()), productAttributes);
 
                 products.Add(product);
             }
 
             return products;
-
         }
 
         public Product GetProduct(int productId)
@@ -334,17 +342,44 @@ namespace OnlineShop.BusinessLayer
 
             Product product = null;
 
-   
             Dictionary<String, String> productAttributes = GetProductAttributes(Convert.ToInt32(reader[0]));
             product = ProductFactory.Produce(Convert.ToInt32(reader[0]), reader[1].ToString(),
                 Convert.ToDecimal(reader[2]), Convert.ToInt32(reader[3]),
-                (ProductType) Enum.Parse(typeof(ProductType), reader[4].ToString()), productAttributes);
-     
+                (ProductType)Enum.Parse(typeof(ProductType), reader[4].ToString()), productAttributes);
+
             reader.Close();
             dbConnection.Close();
 
             return product;
+        }
 
+        public List<Order> GetCustomerOrders(Customer customer)
+        {
+            string getAllOrders = $@"SELECT id, CustomerId, AmountToPay, DateOfOrder, Status " +
+                $@"FROM [dbo].[Orders] WHERE CustomerId='{customer.CustomerId}'";
+
+            List<Order> orders = new List<Order>();
+
+            SqlConnection dbConnection = new SqlConnection(connectionString);
+
+            SqlCommand command = new SqlCommand(getAllOrders, dbConnection);
+
+            dbConnection.Open();
+
+            SqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                Dictionary<Product, int> orderProducts = GetOrderProducts(Convert.ToInt32(reader[0]));
+
+                Order order = new Order(Convert.ToInt32(reader[0]), customer, Convert.ToDecimal(reader[2]),
+                    orderProducts, Convert.ToDateTime(reader[3]), Convert.ToBoolean(reader[4]));
+
+                orders.Add(order);
+            }
+            reader.Close();
+            dbConnection.Dispose();
+
+            return orders;
         }
 
         private Dictionary<Product, int> GetOrderProducts(int orderId)
@@ -399,7 +434,4 @@ namespace OnlineShop.BusinessLayer
             return productAttributes;
         }
     }
-
-   
 }
-

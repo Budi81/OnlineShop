@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace OnlineShop.BusinessLayer
 {
@@ -11,7 +9,7 @@ namespace OnlineShop.BusinessLayer
         private decimal countPrice;
 
         public Dictionary<Product, int> Products { get => products; private set => products = value; }
-        
+
         public decimal CountPrice { get => countPrice; private set => countPrice = value; }
 
         public void AddToChart(Product product, int quantity)
