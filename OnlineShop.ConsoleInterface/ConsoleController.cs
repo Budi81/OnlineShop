@@ -8,7 +8,7 @@ namespace OnlineShop.ConsoleInterface
 {
     public class ConsoleController : IController
     {
-        public int UserChoice(string message)
+        public int UserChoiceInt(string message)
         {
             bool output;
             do
@@ -18,6 +18,13 @@ namespace OnlineShop.ConsoleInterface
                 output = int.TryParse(Console.ReadLine(), out int result);
                 return result;
             } while (!output);
+        }
+
+        public string UserInputString(string message)
+        {
+            Console.Write(message);
+            string result = Console.ReadLine();
+            return result;
         }
 
         public void DisplayMessage(string massage, int milliseconds)
@@ -63,5 +70,52 @@ namespace OnlineShop.ConsoleInterface
                 $"Adress:: {customer.Address}");
             Console.WriteLine(new string('-', 30));
         }
+
+        public void DisplayOrder(Order order)
+        {
+            Console.Clear();
+            Console.WriteLine(new string('-', 30));
+            Console.WriteLine($"Order Id: {order.OrderId}\n" +
+                $"Customer: id{order.Customer.CustomerId} {order.Customer.Name} {order.Customer.Surname}\n" +
+                $"email: {order.Customer.Email}\n" +
+                $"Adress: {order.Customer.Address}\n" +
+                $"Amount to pay: {order.OrderCount}\n" +
+                $"Date of order: {order.DateOfOrder}");
+            DisplayProductInOrder(order);
+            Console.WriteLine(new string('-', 30));
+        }
+
+        public void DisplayProduct(Product product)
+        {
+            Console.WriteLine(new string('-', 30));
+            Console.WriteLine($"Product Id: {product.ProductId}\n" +
+                $"Product: {product.ProductName} amount: {product.Stock}\n" +
+                $"Product type: {product.Type}");
+            DisplayAttributes(product);
+        }
+
+        private void DisplayProductInOrder(Order order)
+        {
+            foreach (KeyValuePair<Product, int> productAmount in order.Products)
+            {
+                Console.WriteLine(new string('-', 50));
+                Console.WriteLine($"Product Id: {productAmount.Key.ProductId}\n" +
+                    $"Product: {productAmount.Key.ProductName} amount: {productAmount.Value}\n" +
+                    $"Product type: {productAmount.Key.Type}");
+                DisplayAttributes(productAmount.Key);
+            }
+        }
+
+        private void DisplayAttributes(Product product)
+        {
+            List<ProductAttribute> productAttributes = product.GetAttributes();
+            Console.WriteLine(new string('-', 50));
+            foreach (var attribute in productAttributes)
+            {
+                Console.WriteLine($"{attribute.Name}: {attribute.Value}");
+            }
+            Console.WriteLine(new string('-', 50));
+        }
     }
+
 }

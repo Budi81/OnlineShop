@@ -6,7 +6,9 @@ namespace OnlineShop.BusinessLayer
 {
     public interface IController
     {
-        int UserChoice(string message);
+        int UserChoiceInt(string message);
+
+        string UserInputString(string message);
 
         void DisplayMessage(string massage, int milliseconds);
 
@@ -17,5 +19,11 @@ namespace OnlineShop.BusinessLayer
         string GetPassword();
 
         void DisplayCustomer(Customer customer);
+
+        void DisplayOrder(Order order);
+
+        void DisplayProduct(Product product);
+
+
     }
 }

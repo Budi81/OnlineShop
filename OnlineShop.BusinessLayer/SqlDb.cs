@@ -256,29 +256,6 @@ namespace OnlineShop.BusinessLayer
                 return new GetCustomerResult(customer);                
             }
         }
-
-        //public GetCustomerResult GetCustomer(string email, string password)
-        //{
-        //    string getCustomer = $@"SELECT CustomerId, FirstName, LastName, Adress, Email, Password "
-        //        +$@"FROM [dbo].[Customers] WHERE Email='{email}' and Password='{password}'";
-
-        //    SqlConnection dbConnection = new SqlConnection(connectionString);
-
-        //    SqlCommand command = new SqlCommand(getCustomer, dbConnection);
-
-        //    dbConnection.Open();
-
-        //    SqlDataReader reader = command.ExecuteReader();
-
-        //    Customer customer = new Customer(Convert.ToInt32(reader[0]), reader[1].ToString(), reader[2].ToString(), 
-        //        reader[3].ToString(), reader[4].ToString(), reader[5].ToString());
-
-        //    reader.Close();
-        //    dbConnection.Close();
-
-        //    customer = 
-
-        //}
         
         public Order GetOrder(string orderId)
         {

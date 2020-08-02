@@ -24,7 +24,7 @@ namespace OnlineShop.BusinessLayer
 
         private int DisplayStartingMenu()
         {
-            int userChoice = controller.UserChoice(
+            int userChoice = controller.UserChoiceInt(
                 "Welcome to E-Shop!\n" +
                 "What do you want to do?\n" +
                 "  (1) Login\n" +
@@ -75,12 +75,14 @@ namespace OnlineShop.BusinessLayer
             }
         }
 
-        private void ShowCustomer(int customerId)
+        private void FindCustomers(string name, string surname)
         {
-            Customer customer = database.GetCustomer(customerId);
-            controller.WriteOutData(
-                $"ID: {customer.CustomerId}, {customer.Name} {customer.Surname}\n" +
-                $"e-mail: {customer.Email}");
+            List<Customer> customers = database.GetCustomers(name, surname);
+
+            foreach (var customer in customers)
+            {
+                controller.DisplayCustomer(customer);
+            };
         }
 
         private void ShowAllOrders()
@@ -98,10 +100,7 @@ namespace OnlineShop.BusinessLayer
         private void FindOrder(string orderId)
         {
             Order order = database.GetOrder(orderId);
-            controller.WriteOutData(
-                $"ID: {order.OrderId}, Date: {order.DateOfOrder}, " +
-                $"Product: {order.Products}, Count: {order.OrderCount}, " +
-                $"Customer: {order.Customer}, Sent: {order.IsSend}");
+            controller.DisplayOrder(order);
         }
 
         private void CreateAccount()
@@ -158,13 +157,15 @@ namespace OnlineShop.BusinessLayer
                     logIn = true;
                     while (logIn)
                     {
-                        switch (controller.UserChoice(
+                        switch (controller.UserChoiceInt(
                             "Hi Mark!" +
                             "What do you want to do today?\n" +
                             "  (1) Show all orders\n" +
                             "  (2) Show all customers\n" +
                             "  (3) Show all products\n" +
-                            "  (4) Logout"))
+                            "  (4) Find customer\n" +
+                            "  (5) Find order\n" +
+                            "  (6) Logout"))
                         {
                             case 1:
                                 ShowAllOrders();
@@ -179,6 +180,18 @@ namespace OnlineShop.BusinessLayer
 
                                 break;
                             case 4:
+                                string userName = controller.UserInputString("Customer name: ");
+                                string userSurname = controller.UserInputString("Customer Surname: ");
+                                FindCustomers(userName, userSurname);
+
+
+                                break;
+                            case 5:
+                                string orderId = controller.UserInputString("Order id: ");
+                                FindOrder(orderId);
+
+                                break;
+                            case 6:
                                 controller.DisplayMessage("Logging out..", 1000);
                                 logIn = false;
 
@@ -197,7 +210,7 @@ namespace OnlineShop.BusinessLayer
 
                     while (logIn)
                     {
-                        switch (controller.UserChoice(
+                        switch (controller.UserChoiceInt(
                             $"Hello {customer.Name}!\n" +
                             $"How may I help you?\n" +
                             "  (1) Go Shopping\n" +
