@@ -121,6 +121,9 @@ namespace OnlineShop.BusinessLayer
             while (isRunning)
             {
                 int userChoice = DisplayStartingMenu();
+                bool errorDisplayed = false;
+                userLogin = null;
+                userPassword = null;
 
                 switch (userChoice)
                 {
@@ -131,51 +134,64 @@ namespace OnlineShop.BusinessLayer
                         CreateAccount();
                         break;
                     case 3:
+                        controller.ProgramExit();
                         break;
                     default:
                         controller.DisplayError("Wrong choice!", 1000);
+                        errorDisplayed = true;
                         break;
+                }
+
+                if (errorDisplayed)
+                {
+                    continue;
                 }
 
                 if (IsEmployee())
                 {
-                    switch (controller.UserChoice(
-                        "Hi Mark!" +
-                        "What do you want to do today?\n" +
-                        "  (1) Show all orders\n" +
-                        "  (2) ..."))
+                    do
                     {
-                        case 1:
-                            ShowAllOrders();
-                            
-                            break;
-                        case 2:
-                            
+                        errorDisplayed = false;
+                        switch (controller.UserChoice(
+                            "Hi Mark!" +
+                            "What do you want to do today?\n" +
+                            "  (1) Show all orders\n" +
+                            "  (2) ..."))
+                        {
+                            case 1:
+                                ShowAllOrders();
+                                break;
+                            case 2:
+                                
+                                break;
 
-                            break;
-
-                        default:
-                            controller.DisplayError("Wrong choice!", 1000);
-
-                            break;
-                    }
+                            default:
+                                controller.DisplayError("Wrong choice!", 1000);
+                                errorDisplayed = true;
+                                break;
+                        }
+                    } while (errorDisplayed);
 
                 }
                 else
                 {
-                    switch (controller.UserChoice(
-                        $"Hello {userLogin}!\n" +
-                        $"How may I help you?\n" +
-                        $"  (1) ..."))
+                    do
                     {
-                        case 1:
+                        errorDisplayed = false;
+                        switch (controller.UserChoice(
+                            $"Hello {userLogin}!\n" +
+                            $"How may I help you?\n" +
+                            $"  (1) ..."))
+                        {
+                            case 1:
 
-                            break;
-                        default:
-                            controller.DisplayError("Wrong choice!", 1000);
-
-                            break;
-                    }
+                                break;
+                            default:
+                                controller.DisplayError("Wrong choice!", 1000);
+                                errorDisplayed = true;
+                                break;
+                        }
+                    } while (errorDisplayed);
 
                 }
             }

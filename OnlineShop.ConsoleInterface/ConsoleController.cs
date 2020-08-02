@@ -55,5 +55,10 @@ namespace OnlineShop.ConsoleInterface
             return password;
         }
 
+        public void ProgramExit()
+        {
+            Environment.Exit(0);
+        }
+
     }
 }

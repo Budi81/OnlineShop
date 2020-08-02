@@ -15,5 +15,7 @@ namespace OnlineShop.BusinessLayer
         string GetInput(string message);
 
         string GetPassword();
+
+        void ProgramExit();
     }
 }
