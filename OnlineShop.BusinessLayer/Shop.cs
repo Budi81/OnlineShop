@@ -224,7 +224,8 @@ namespace OnlineShop.BusinessLayer
                             $"How may I help you?\n" +
                             "  (1) Go Shopping\n" +
                             "  (2) Show my order\n" +
-                            "  (3) Logout"))
+                            "  (3) Show all products\n" +
+                            "  (4) Logout"))
                         {
                             case 1:
                                 ShowAllProducts();
@@ -237,6 +238,11 @@ namespace OnlineShop.BusinessLayer
                                 break;
 
                             case 3:
+                                ShowAllProducts();
+
+                                break;
+
+                            case 4:
                                 controller.DisplayMessage("Logging out..", 1000);
                                 logIn = false;
 

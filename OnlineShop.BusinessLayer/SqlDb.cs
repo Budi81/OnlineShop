@@ -153,7 +153,7 @@ namespace OnlineShop.BusinessLayer
         public List<Order> GetAllOrders()
         {
             string getAllOrders =
-                @"SELECT id, CustomerId, AmountToPay, DateOfOrder, Status FROM [dbo].[Orders]";
+                @"SELECT id, CustomerId, AmauntToPay, DateOfOrder, Status FROM [dbo].[Orders]";
 
             List<Order> orders = new List<Order>();
 
