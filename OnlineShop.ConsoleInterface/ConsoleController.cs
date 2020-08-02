@@ -106,6 +106,20 @@ namespace OnlineShop.ConsoleInterface
             }
         }
 
+        public void DisplayCart(ShoppingCart shoppingCart)
+        {
+            if (shoppingCart.Products != null)
+                foreach (var shoppingCartProduct in shoppingCart.Products)
+                {
+                    Console.WriteLine(
+                        $"{shoppingCartProduct.Key.ProductName}\t{shoppingCartProduct.Key.Price}\tx{shoppingCartProduct.Value}");
+                }
+            else
+            {
+                Console.WriteLine("Your cart is empty at the moment. Add something to it ;)");
+            }
+        }
+
         private void DisplayAttributes(Product product)
         {
             List<ProductAttribute> productAttributes = product.GetAttributes();

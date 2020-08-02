@@ -18,6 +18,8 @@
 
         void DisplayOrder(Order order);
 
+        void DisplayCart(ShoppingCart shoppingCart);
+
         void DisplayProduct(Product product);
     }
 }

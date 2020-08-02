@@ -37,8 +37,9 @@ namespace OnlineShop.BusinessLayer
         public Customer Customer { get => customer; private set => customer = value; }
         public DateTime DateOfOrder { get => dateOfOrder; set => dateOfOrder = value; }
 
-        public static Order FromShoppingCart(ShoppingCart shoppingCart, Customer customer)
+        public static Order FromShoppingCart(Customer customer)
         {
+            ShoppingCart shoppingCart = customer.Chart;
             decimal orderCount = 0;
             foreach (KeyValuePair<Product, int> keyValuePair in shoppingCart.Products)
             {

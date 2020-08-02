@@ -132,6 +132,7 @@ namespace OnlineShop.BusinessLayer
             while (isRunning)
             {
                 int userChoice = DisplayStartingMenu();
+                bool restart = false;
                 userLogin = null;
                 userPassword = null;
 
@@ -143,6 +144,7 @@ namespace OnlineShop.BusinessLayer
 
                     case 2:
                         CreateAccount();
+                        restart = true;
                         break;
 
                     case 3:
@@ -154,6 +156,11 @@ namespace OnlineShop.BusinessLayer
                     default:
                         controller.DisplayMessage("Wrong choice!", 1000);
                         break;
+                }
+
+                if (restart)
+                {
+                    continue;
                 }
 
                 if (IsEmployee() && isRunning)
@@ -224,8 +231,11 @@ namespace OnlineShop.BusinessLayer
                             $"How may I help you?\n" +
                             "  (1) Go Shopping\n" +
                             "  (2) Show my order\n" +
-                            "  (3) Show all products\n" +
-                            "  (4) Logout"))
+                            "  (3) Show my cart\n" +
+                            "  (4) Show all shop products\n" +
+                            "  (5) Add product to your cart\n" +
+                            "  (6) Place order\n" +
+                            "  (7) Logout"))
                         {
                             case 1:
                                 ShowAllProducts();
@@ -238,11 +248,33 @@ namespace OnlineShop.BusinessLayer
                                 break;
 
                             case 3:
-                                ShowAllProducts();
+                                controller.DisplayCart(customer.Chart);
 
                                 break;
 
                             case 4:
+                                ShowAllProducts();
+
+                                break;
+
+                            case 5:
+                                var productId =
+                                    controller.UserChoiceInt("What is the product ID you want to add to your cart?");
+                                var numberOfItems = controller.UserChoiceInt("How much of it you want to buy?");
+                                var selectedProduct = database.GetProduct(productId);
+                                customer.Chart.AddToChart(selectedProduct, numberOfItems);
+                                controller.DisplayMessage($"{selectedProduct.ProductName} added to cart!", 700);
+                                
+                                break;
+
+                            case 6:
+                                var customerOrder = Order.FromShoppingCart(customer);
+                                database.AddOrder(customerOrder);
+                                controller.DisplayMessage("Your order has been placed!", 700);
+
+                                break;
+
+                            case 7:
                                 controller.DisplayMessage("Logging out..", 1000);
                                 logIn = false;
 
