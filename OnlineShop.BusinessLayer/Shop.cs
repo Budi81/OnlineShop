@@ -24,6 +24,7 @@ namespace OnlineShop.BusinessLayer
 
         private int DisplayStartingMenu()
         {
+<<<<<<< HEAD
             int userChoice = controller.UserChoiceInt(
                 "Welcome to E-Shop!\n" +
                 "What do you want to do?\n" +
@@ -31,6 +32,13 @@ namespace OnlineShop.BusinessLayer
                 "  (2) Sign in\n" +
                 "  (3) Exit");
             return userChoice;
+=======
+            Console.WriteLine("Welcome to Eshop!");
+            Console.WriteLine("1. Login");
+            Console.WriteLine("2. Sign Up");
+            Console.WriteLine("3. Exit");
+            Console.ReadLine();
+>>>>>>> origin/Igor
         }
 
         private void UserLogin()
