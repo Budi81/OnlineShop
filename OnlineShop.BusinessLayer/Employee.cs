@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace OnlineShop.BusinessLayer
+﻿namespace OnlineShop.BusinessLayer
 {
     public class Employee
     {
-        string login;
+        public static string Login = "mark@shop.com";
 
-        string password;
-
-
+        public static string Password = "12345";
     }
 }

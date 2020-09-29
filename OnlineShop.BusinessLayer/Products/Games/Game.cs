@@ -13,17 +13,13 @@ namespace OnlineShop.BusinessLayer.Products.Games
 
         private GamesCategory category;
 
-        public Game(int productId, string productName, decimal price, int stock, ProductType type, GamesStorageDataDevices gamesStorageDataDevices, GamesPlatforms platform, GamesCategory category) 
+        public Game(int productId, string productName, decimal price, int stock, ProductType type, 
+            GamesStorageDataDevices gamesStorageDataDevices, GamesPlatforms platform, GamesCategory category) 
             : base(productId, productName, price, stock, type)
         {
-            this.DataStorageDevice = dataStorageDevice;
+            this.DataStorageDevice = gamesStorageDataDevices;
             this.Platform = platform;
             this.category = category;
-        }
-
-        public override ProductType GetType()
-        {
-            throw new NotImplementedException();
         }
 
         public override List<ProductAttribute> GetAttributes()

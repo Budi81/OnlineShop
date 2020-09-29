@@ -32,8 +32,6 @@ namespace OnlineShop.BusinessLayer
         public decimal Price { get => price; private set => price = value; }
         public int Stock { get => stock; private set => stock = value; }
         public ProductType Type { get => type; private set => type = value; }
-
-        public abstract ProductType GetType();
         
         public abstract List<ProductAttribute> GetAttributes();
 
