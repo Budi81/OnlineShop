@@ -7,11 +7,7 @@ namespace OnlineShop.BusinessLayer.Products.Games
 {
     public class Game :Product
     {
-        private GamesStorageDataDevices dataStorageDevice;
 
-        private GamesPlatforms platform;
-
-        private GamesCategory category;
 
         public Game(int productId, string productName, decimal price, int stock, ProductType type, 
             GamesStorageDataDevices gamesStorageDataDevices, GamesPlatforms platform, GamesCategory category) 
@@ -19,15 +15,15 @@ namespace OnlineShop.BusinessLayer.Products.Games
         {
             this.DataStorageDevice = gamesStorageDataDevices;
             this.Platform = platform;
-            this.category = category;
+            this.Category = category;
         }
 
         public override List<ProductAttribute> GetAttributes()
         {
             List<ProductAttribute> attributes = new List<ProductAttribute>();
-            attributes.Add(new ProductAttribute("Game Storage Device", dataStorageDevice.ToString()));
-            attributes.Add(new ProductAttribute("Platform", platform.ToString()));
-            attributes.Add(new ProductAttribute("Category", category.ToString()));
+            attributes.Add(new ProductAttribute("Game Storage Device", DataStorageDevice.ToString()));
+            attributes.Add(new ProductAttribute("Platform", Platform.ToString()));
+            attributes.Add(new ProductAttribute("Category", Category.ToString()));
 
             return attributes;
         }
@@ -37,10 +33,10 @@ namespace OnlineShop.BusinessLayer.Products.Games
               return new Game(newId, this.ProductName, this.Price, this.Stock, this.Type, this.DataStorageDevice, this.Platform, this.Category);
         }
 
-        public GamesStorageDataDevices DataStorageDevice { get => dataStorageDevice; private set => dataStorageDevice = value; }
+        public GamesStorageDataDevices DataStorageDevice { get; private set; }
         
-        public GamesPlatforms Platform { get => platform; private set => platform = value; }
-        public GamesCategory Category { get => category; private set => category = value; }
+        public GamesPlatforms Platform { get; private set; }
+        public GamesCategory Category { get; private set; }
 
 
     }

@@ -24,7 +24,7 @@ namespace OnlineShop.BusinessLayer
 
         Customer GetCustomer(int customerId);
 
-        GetCustomerResult GetCustomer(string email, string password);
+        Customer GetCustomer(string email, string password);
 
         Order GetOrder(string orderId);
 

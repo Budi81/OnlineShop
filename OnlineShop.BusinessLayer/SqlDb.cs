@@ -260,14 +260,9 @@ namespace OnlineShop.BusinessLayer
             return customer;
         }
 
-        public GetCustomerResult GetCustomer(string email, string password)
+        public Customer GetCustomer(string email, string password)
         {
-            var customer = GetAllCustomers().FirstOrDefault(c => c.Email == email && c.Password == password);
-            if (customer == null)
-            {
-                return new GetCustomerResult();
-            }
-            return new GetCustomerResult(customer);
+            return GetAllCustomers()?.FirstOrDefault(c => c.Email == email && c.Password == password);
         }
 
         public Order GetOrder(string orderId)

@@ -7,9 +7,7 @@ using System.Text;
 namespace OnlineShop.BusinessLayer
 {
     public abstract class Product
-    {
-        protected readonly int productId;
-        
+    {       
         private int stock;
         
         private decimal price;
@@ -20,14 +18,14 @@ namespace OnlineShop.BusinessLayer
 
         public Product(int productId, string productName, decimal price, int stock, ProductType type)
         {
-            this.productId = productId;
+            this.ProductId = productId;
             ProductName = productName;
             Price = price;
             Stock = stock;
             Type = type;
         }
 
-        public int ProductId { get => productId; }
+        public int ProductId { get; }
         public string ProductName { get => productName; private set => productName = value; }
         public decimal Price { get => price; private set => price = value; }
         public int Stock { get => stock; private set => stock = value; }

@@ -4,12 +4,11 @@ namespace OnlineShop.BusinessLayer
 {
     public class GetCustomerResult
     {
-        private Customer customer;
 
         private GetCustomerResult(bool isFound, Customer foundEntry)
         {
             IsFound = isFound;
-            customer = foundEntry;
+            FoundEntry = foundEntry;
         }
 
         public GetCustomerResult(Customer foundEntry)
@@ -24,23 +23,6 @@ namespace OnlineShop.BusinessLayer
 
         public bool IsFound { get; private set; }
 
-        public Customer FoundEntry
-        {
-            get
-            {
-                if (this.IsFound == true)
-                {
-                    return this.customer;
-                }
-                else
-                {
-                    throw new InvalidOperationException("Wrong login or password!");
-                }
-            }
-            private set
-            {
-                this.customer = value;
-            }
-        }
+        public Customer FoundEntry { get; private set; }
     }
 }

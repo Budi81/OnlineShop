@@ -4,25 +4,25 @@ namespace OnlineShop.BusinessLayer
 {
     public class Shop
     {
-        private bool isRunning = true;
-        private bool logIn = false;
+        private bool _isRunning = true;
+        private bool _logIn = false;
 
-        private string userLogin = null;
-        private string userPassword = null;
+        private string _userLogin = null;
+        private string _userPassword = null;
 
-        private IDatabase database;
+        private IDatabase _database;
 
-        private IController controller;
+        private IController _controller;
 
         public Shop(IDatabase database, IController controller)
         {
-            this.database = database;
-            this.controller = controller;
+            this._database = database;
+            this._controller = controller;
         }
 
         private int DisplayStartingMenu()
         {
-            int userChoice = controller.UserChoiceInt(
+            int userChoice = _controller.UserChoiceInt(
                 "Welcome to E-Shop!\n" +
                 "What do you want to do?\n" +
                 "  (1) Login\n" +
@@ -33,21 +33,21 @@ namespace OnlineShop.BusinessLayer
 
         private void UserLogin()
         {
-            userLogin = controller.GetInput("Login: ");
-            userPassword = controller.GetPassword();
+            _userLogin = _controller.GetInput("Login: ");
+            _userPassword = _controller.GetPassword();
         }
 
         public bool IsEmployee()
         {
-            return (userLogin == Employee.Login && userPassword == Employee.Password);
+            return (_userLogin == Employee.Login && _userPassword == Employee.Password);
         }
 
         private void ShowAllProducts()
         {
-            List<Product> products = database.GetAllProducts();
+            List<Product> products = _database.GetAllProducts();
             foreach (var product in products)
             {
-                controller.WriteOutData(
+                _controller.WriteOutData(
                     $"ID: {product.ProductId}, Type: {product.Type}, " +
                     $"Name: {product.ProductName}, Price: {product.Price}, " +
                     $"In stock: {product.Stock}");
@@ -56,9 +56,9 @@ namespace OnlineShop.BusinessLayer
 
         private void ShowProduct(string productName)
         {
-            List<Product> products = database.GetProduct(productName);
+            List<Product> products = _database.GetProduct(productName);
             Product product = products[0];
-            controller.WriteOutData(
+            _controller.WriteOutData(
                 $"ID: {product.ProductId}, Type: {product.Type}, " +
                 $"Name: {product.ProductName}, Price: {product.Price}, " +
                 $"In stock: {product.Stock}");
@@ -66,29 +66,29 @@ namespace OnlineShop.BusinessLayer
 
         private void ShowAllCustomers()
         {
-            List<Customer> allCustomers = database.GetAllCustomers();
+            List<Customer> allCustomers = _database.GetAllCustomers();
             foreach (var customer in allCustomers)
             {
-                controller.DisplayCustomer(customer);
+                _controller.DisplayCustomer(customer);
             }
         }
 
         private void FindCustomers(string name, string surname)
         {
-            List<Customer> customers = database.GetCustomers(name, surname);
+            List<Customer> customers = _database.GetCustomers(name, surname);
 
             foreach (var customer in customers)
             {
-                controller.DisplayCustomer(customer);
+                _controller.DisplayCustomer(customer);
             };
         }
 
         private void ShowAllOrders()
         {
-            List<Order> orders = database.GetAllOrders();
+            List<Order> orders = _database.GetAllOrders();
             foreach (var order in orders)
             {
-                controller.WriteOutData(
+                _controller.WriteOutData(
                     $"ID: {order.OrderId}, Date: {order.DateOfOrder}, " +
                     $"Product: {order.Products}, Count: {order.OrderCount}, " +
                     $"Customer: {order.Customer}, Sent: {order.IsSend}");
@@ -97,30 +97,30 @@ namespace OnlineShop.BusinessLayer
 
         private void FindOrder(string orderId)
         {
-            Order order = database.GetOrder(orderId);
-            controller.DisplayOrder(order);
+            Order order = _database.GetOrder(orderId);
+            _controller.DisplayOrder(order);
         }
 
         private void CreateAccount()
         {
             int id = 0;
-            string name = controller.GetInput("Name: ");
-            string surname = controller.GetInput("Surname: ");
-            string address = controller.GetInput("Address: ");
-            string email = controller.GetInput("E-mail: ");
-            userLogin = email;
-            string password = controller.GetPassword();
+            string name = _controller.GetInput("Name: ");
+            string surname = _controller.GetInput("Surname: ");
+            string address = _controller.GetInput("Address: ");
+            string email = _controller.GetInput("E-mail: ");
+            _userLogin = email;
+            string password = _controller.GetPassword();
 
             Customer newCustomer = new Customer(id, name, surname, address, email, password);
-            database.AddCustomer(newCustomer);
+            _database.AddCustomer(newCustomer);
         }
 
         private void ShowCustomerOrders(Customer customer)
         {
-            List<Order> orders = database.GetCustomerOrders(customer);
+            List<Order> orders = _database.GetCustomerOrders(customer);
             foreach (var order in orders)
             {
-                controller.WriteOutData(
+                _controller.WriteOutData(
                     $"ID: {order.OrderId}, Date: {order.DateOfOrder}, " +
                     $"Product: {order.Products}, Count: {order.OrderCount}, " +
                     $"Sent: {order.IsSend}");
@@ -129,12 +129,12 @@ namespace OnlineShop.BusinessLayer
 
         public void ProgramRunning()
         {
-            while (isRunning)
+            while (_isRunning)
             {
                 int userChoice = DisplayStartingMenu();
                 bool restart = false;
-                userLogin = null;
-                userPassword = null;
+                _userLogin = null;
+                _userPassword = null;
 
                 switch (userChoice)
                 {
@@ -148,27 +148,27 @@ namespace OnlineShop.BusinessLayer
                         break;
 
                     case 3:
-                        controller.DisplayMessage("Ending program", 1000);
-                        isRunning = false;
+                        _controller.DisplayMessage("Ending program", 1000);
+                        _isRunning = false;
 
                         break;
 
                     default:
-                        controller.DisplayMessage("Wrong choice!", 1000);
+                        _controller.DisplayMessage("Wrong choice!", 1000);
                         break;
                 }
 
-                if (restart)
-                {
+                if (restart) 
                     continue;
-                }
 
-                if (IsEmployee() && isRunning)
+                Customer customer = _database.GetCustomer(_userLogin, _userPassword);
+
+                if (IsEmployee() && _isRunning)
                 {
-                    logIn = true;
-                    while (logIn)
+                    _logIn = true;
+                    while (_logIn)
                     {
-                        switch (controller.UserChoiceInt(
+                        switch (_controller.UserChoiceInt(
                             "Hi Mark!" +
                             "What do you want to do today?\n" +
                             "  (1) Show all orders\n" +
@@ -194,39 +194,39 @@ namespace OnlineShop.BusinessLayer
                                 break;
 
                             case 4:
-                                string userName = controller.UserInputString("Customer name: ");
-                                string userSurname = controller.UserInputString("Customer Surname: ");
-                                FindCustomers(userName, userSurname);
-
-                                break;
+                                {
+                                    string userName = _controller.UserInputString("Customer name: ");
+                                    string userSurname = _controller.UserInputString("Customer Surname: ");
+                                    FindCustomers(userName, userSurname);
+                                    break;
+                                }
 
                             case 5:
-                                string orderId = controller.UserInputString("Order id: ");
+                                string orderId = _controller.UserInputString("Order id: ");
                                 FindOrder(orderId);
 
                                 break;
 
                             case 6:
-                                controller.DisplayMessage("Logging out..", 1000);
-                                logIn = false;
+                                _controller.DisplayMessage("Logging out..", 1000);
+                                _logIn = false;
 
                                 break;
 
                             default:
-                                controller.DisplayMessage("Wrong choice!", 1000);
+                                _controller.DisplayMessage("Wrong choice!", 1000);
 
                                 break;
                         }
                     }
                 }
-                else if (database.GetCustomer(userLogin, userPassword).IsFound && isRunning)
+                else if (customer != null && _isRunning)
                 {
-                    logIn = true;
-                    Customer customer = database.GetCustomer(userLogin, userPassword).FoundEntry;
+                    _logIn = true;
 
-                    while (logIn)
+                    while (_logIn)
                     {
-                        switch (controller.UserChoiceInt(
+                        switch (_controller.UserChoiceInt(
                             $"Hello {customer.Name}!\n" +
                             $"How may I help you?\n" +
                             "  (1) Go Shopping\n" +
@@ -248,7 +248,7 @@ namespace OnlineShop.BusinessLayer
                                 break;
 
                             case 3:
-                                controller.DisplayCart(customer.Chart);
+                                _controller.DisplayCart(customer.Chart);
 
                                 break;
 
@@ -259,37 +259,37 @@ namespace OnlineShop.BusinessLayer
 
                             case 5:
                                 var productId =
-                                    controller.UserChoiceInt("What is the product ID you want to add to your cart?");
-                                var numberOfItems = controller.UserChoiceInt("How much of it you want to buy?");
-                                var selectedProduct = database.GetProduct(productId);
+                                    _controller.UserChoiceInt("What is the product ID you want to add to your cart?");
+                                var numberOfItems = _controller.UserChoiceInt("How much of it you want to buy?");
+                                var selectedProduct = _database.GetProduct(productId);
                                 customer.Chart.AddToChart(selectedProduct, numberOfItems);
-                                controller.DisplayMessage($"{selectedProduct.ProductName} added to cart!", 700);
+                                _controller.DisplayMessage($"{selectedProduct.ProductName} added to cart!", 700);
                                 
                                 break;
 
                             case 6:
                                 var customerOrder = Order.FromShoppingCart(customer);
-                                database.AddOrder(customerOrder);
-                                controller.DisplayMessage("Your order has been placed!", 700);
+                                _database.AddOrder(customerOrder);
+                                _controller.DisplayMessage("Your order has been placed!", 700);
 
                                 break;
 
                             case 7:
-                                controller.DisplayMessage("Logging out..", 1000);
-                                logIn = false;
+                                _controller.DisplayMessage("Logging out..", 1000);
+                                _logIn = false;
 
                                 break;
 
                             default:
-                                controller.DisplayMessage("Wrong choice!", 1000);
+                                _controller.DisplayMessage("Wrong choice!", 1000);
 
                                 break;
                         }
                     }
                 }
-                else if (!database.GetCustomer(userLogin, userPassword).IsFound && isRunning)
+                else if (customer == null && _isRunning)
                 {
-                    controller.DisplayMessage("Wrong login or password", 1000);
+                    _controller.DisplayMessage("Wrong login or password", 1000);
                 }
             }
         }
