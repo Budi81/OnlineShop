@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineShop.BusinessLayer", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineShop.ConsoleInterface", "OnlineShop.ConsoleInterface\OnlineShop.ConsoleInterface.csproj", "{5ED0BBA1-2000-4669-ADCA-FB9E40E3F929}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineShopTests", "OnlineShopTests\OnlineShopTests.csproj", "{BC2A391A-76AD-4D05-AA0E-B10431C9A846}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{5ED0BBA1-2000-4669-ADCA-FB9E40E3F929}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5ED0BBA1-2000-4669-ADCA-FB9E40E3F929}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5ED0BBA1-2000-4669-ADCA-FB9E40E3F929}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC2A391A-76AD-4D05-AA0E-B10431C9A846}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC2A391A-76AD-4D05-AA0E-B10431C9A846}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC2A391A-76AD-4D05-AA0E-B10431C9A846}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC2A391A-76AD-4D05-AA0E-B10431C9A846}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
