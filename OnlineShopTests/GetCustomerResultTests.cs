@@ -23,8 +23,7 @@ namespace OnlineShopTests
         {
             var exception = new InvalidOperationException("Wrong login or password!");
             var getCustomerResult = new GetCustomerResult();
-            var result = getCustomerResult.FoundEntry;
-            Assert.AreEqual(exception, result);
+            Assert.That(() => getCustomerResult.FoundEntry, Throws.InvalidOperationException.And.Message.EqualTo("Wrong login or password!"));
         }
     }
 }
